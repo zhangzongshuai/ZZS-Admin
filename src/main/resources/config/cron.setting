@@ -1,0 +1,16 @@
+# 定时任务
+[com.zzs.demo.cron]
+#测试一分钟执行一次
+#CronTask.cronTest = * * * * *
+
+#每天早上8点执行一次
+#CronTask.AsyncJld = 0 0 8 * * ?
+#CronTask.AsyncJld = 0 0 12 * * ?
+
+#每个月1号0点5分执行一次
+#CronTask.cql = 0 18 0 1 * ? *
+
+#每个月最后一天22点执行一次
+#CronTask.cql = 0 0 22 28,29,30,31 * ? *
+
+
