@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzs.zzsadmin.mapper.RoleUserMapper">
+
+    <select id="getUsersByRoleId" resultType="com.zzs.zzsadmin.vo.Role.RoleUserVo">
+        select
+        u.id id,
+        u.`name` name,
+        u.login_name loginName,
+        (
+        select case when COUNT(*) > 0 then 1 else 0 end
+        from relation_role_user rru
+        where rru.role_id = #{roleId} and rru.user_id = u.id
+        ) as isAssign
+        from core_user u
+        where u.is_deleted = 0 and u.is_enabled = 1
+        <if test="name != null and name != ''">
+            and u.name like '%${name}%'
+        </if>
+        ORDER BY isAssign desc,login_name
+    </select>
+
+    <select id="getRolesByUserId" resultType="com.zzs.zzsadmin.vo.Role.UserRoleVo">
+        select
+            r.id id,
+            r.`name` name,
+            (
+                select case when COUNT(*) > 0 then 1 else 0 end
+                from relation_role_user rru
+                where rru.user_id = '2' and rru.role_id = r.id
+            ) as isAssign
+        FROM core_role r
+        where r.is_enabled = 1
+        ORDER BY isAssign desc,name
+    </select>
+
+</mapper>
