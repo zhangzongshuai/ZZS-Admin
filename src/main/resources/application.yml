@@ -18,7 +18,7 @@ spring:
 
 #mybatis-plus
 mybatis-plus:
-  mapper-locations: classpath*:com/zzs/zzsadmin/**/xml/*Mapper.xml #对应mapper映射xml文件所在路径
+  mapper-locations: classpath:mapper/*.xml #对应mapper映射xml文件所在路径
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 

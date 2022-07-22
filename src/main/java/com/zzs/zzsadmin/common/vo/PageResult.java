@@ -9,7 +9,7 @@ import lombok.Setter;
 public class PageResult<T> extends ResultDataList<T> {
 
     public PageResult(){
-
+        super();
     }
     public PageResult(IPage page){
         this.setDatas(page.getRecords());

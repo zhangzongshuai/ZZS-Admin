@@ -22,16 +22,20 @@ import com.zzs.zzsadmin.dto.user.ModifyPasswordDto;
 import com.zzs.zzsadmin.dto.user.UserDto;
 import com.zzs.zzsadmin.dto.userinfo;
 import com.zzs.zzsadmin.entity.LoginLog;
+import com.zzs.zzsadmin.entity.Role_User;
 import com.zzs.zzsadmin.entity.User;
 import com.zzs.zzsadmin.mapper.UserMapper;
 import com.zzs.zzsadmin.service.ILoginLogService;
+import com.zzs.zzsadmin.service.IRoleUserService;
 import com.zzs.zzsadmin.service.IUserService;
 import com.zzs.zzsadmin.vo.user.UserTokenVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +47,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private ILoginLogService loginLogService;
+
+    @Autowired
+    private IRoleUserService roleUserService;
 
     @Override
     public User getUserByLoginName(String name) {
@@ -93,29 +100,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      * @return
      */
     @Override
-    public int addUser(User user) {
+    public int addUser(User user, String loginName) {
         User user1 = this.getUserByLoginName(user.getLoginName());
         if (user1 != null) {
             throw new MessageException("登录名已存在");
         }
         user.setId(IdUtil.simpleUUID());
         user.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()).toLowerCase());
+        user.setCreator(loginName);
         return um.insert(user);
     }
 
 
     @Override
-    public int GetUserById(String id, User user) {
-        int errcode = 0;
-        try {
-
-            User user1 = um.selectById(id);
-            CopyUtil.CobyTo(user1, user);
-            errcode = 0;
-        } catch (Exception e) {
-            errcode = 1;
-        }
-        return errcode;
+    public User getUserById(String id) {
+        User user = um.selectById(id);
+        return user;
     }
 
     /**
@@ -191,8 +191,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public void modifyUser(UserDto user) {
         User entity = um.selectById(user.getId());
+        if (entity == null) {
+            throw new MessageException("用户不存在,请刷新后重试");
+        }
         BeanUtil.copyProperties(user, entity);
         um.updateById(entity);
+    }
+
+
+    /**
+     * 配置用户角色
+     *
+     * @param roleIds
+     * @param userId
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void configUserRoles(List<String> roleIds, String userId) {
+
+        List<Role_User> roleUsers = roleUserService.list(new QueryWrapper<Role_User>().eq("user_id", userId));
+        if (roleIds != null && roleUsers.size() > 0) {
+            roleUserService.remove(new QueryWrapper<Role_User>().eq("user_d", userId));
+        }
+        if (roleIds.size() > 0) {
+            List<Role_User> list = new ArrayList<>();
+            roleIds.forEach(f -> {
+                Role_User rm = new Role_User();
+                rm.setId(IdUtil.simpleUUID());
+                rm.setRoleId(f);
+                rm.setUserId(userId);
+                list.add(rm);
+            });
+            roleUserService.saveBatch(list);
+        }
     }
 
     /**

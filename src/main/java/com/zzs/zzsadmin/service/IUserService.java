@@ -9,6 +9,7 @@ import com.zzs.zzsadmin.dto.user.UserDto;
 import com.zzs.zzsadmin.dto.userinfo;
 import com.zzs.zzsadmin.entity.User;
 import com.zzs.zzsadmin.vo.user.UserTokenVo;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -46,9 +47,14 @@ public interface IUserService extends IService<User> {
      * @param user
      * @return
      */
-    int addUser(User user);
+    int addUser(User user,String loginName);
 
-    int GetUserById(String id, User user);
+    /**
+     * 根据用户id获取用户信息
+     * @param id
+     * @return
+     */
+    User getUserById(String id);
 
     /**
      * 更改密码
@@ -58,11 +64,27 @@ public interface IUserService extends IService<User> {
      */
     void modifyPassword(ModifyPasswordDto modifyPwd);
 
+    /**
+     * 重置密码
+     * @param id
+     * @param loginName
+     */
     void resetPassword(String id, String loginName);
 
+    /**
+     * 删除用户
+     * @param id
+     * @param loginName
+     */
     void deleteUser(String id, String loginName);
 
+    /**
+     * 修改用户
+     * @param user
+     */
     void modifyUser(UserDto user);
+
+    void configUserRoles(List<String> roleIds, String userId);
 
     /**
      * 登录
