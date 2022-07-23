@@ -31,7 +31,7 @@
         <el-table-column
             prop="description"
             label="描述"
-            width="180">
+            min-width="180">
         </el-table-column>
         <el-table-column
             prop="isEnabled"
@@ -102,18 +102,18 @@
         :visible.sync="assignMenuDailog"
         width="30%">
       <el-row :gutter="20">
-        <el-col :span="4">
+        <el-col :span="6">
           <div>角色名称:</div>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="18">
           <div class="fb">{{ assignRole.name }}</div>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="mt20">
-        <el-col :span="4">
+        <el-col :span="6">
           <div>分配权限:</div>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="18">
           <div class="p10 h200 oa" style="border: #adb3bc 1px solid">
             <el-tree
                 ref="menuTree"

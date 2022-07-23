@@ -88,11 +88,8 @@ public class UserController {
     @ApiOperation(value = "添加用户")
     @PostMapping("/addUser")
     public BaseResultData addUser(@RequestBody UserDto userDto, @RequestParam String loginName) {
-        BaseResultData res = new BaseResultData();
-        User user = new User();
-        BeanUtil.copyProperties(userDto, user);
-        userService.addUser(user, loginName);
-        return res;
+        userService.addUser(userDto, loginName);
+        return new BaseResultData();
 
     }
 
@@ -175,6 +172,10 @@ public class UserController {
     @ApiOperation(value = "根据用户id获取角色")
     @GetMapping("/rolesByUserId")
     public ResultDataList<UserRoleVo> getRolesByUserId(String userId, Long pageNum, Long pageSize) {
+        if (pageSize == null){
+            pageSize = -1L;
+            pageNum = 1L;
+        }
         IPage<UserRoleVo> rolesByUserId = roleUserService.getRolesByUserId(userId, pageNum, pageSize);
         ResultDataList<UserRoleVo> res = new ResultDataList<>(rolesByUserId.getRecords());
         return res;

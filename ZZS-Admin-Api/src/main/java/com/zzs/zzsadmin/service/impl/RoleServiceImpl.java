@@ -29,11 +29,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     /**
      * 添加角色
      *
-     * @param role
+     * @param roleDto
      * @param loginName
      */
     @Override
-    public void addRole(Role role, String loginName) {
+    public void addRole(RoleDto roleDto, String loginName) {
+        Role role = new Role();
+        BeanUtil.copyProperties(roleDto, role);
         role.setId(IdUtil.simpleUUID());
         role.setCreator(loginName);
         this.save(role);

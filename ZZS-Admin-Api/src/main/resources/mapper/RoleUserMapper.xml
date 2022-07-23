@@ -28,7 +28,7 @@
             (
                 select case when COUNT(*) > 0 then 1 else 0 end
                 from relation_role_user rru
-                where rru.user_id = '2' and rru.role_id = r.id
+                where rru.user_id = #{userId} and rru.role_id = r.id
             ) as isAssign
         FROM core_role r
         where r.is_enabled = 1

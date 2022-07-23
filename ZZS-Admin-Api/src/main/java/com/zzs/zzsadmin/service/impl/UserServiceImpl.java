@@ -96,19 +96,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     /**
      * 新增用户
      *
-     * @param user
+     * @param userDto
      * @return
      */
     @Override
-    public int addUser(User user, String loginName) {
-        User user1 = this.getUserByLoginName(user.getLoginName());
+    public void addUser(UserDto userDto, String loginName) {
+        User user1 = this.getUserByLoginName(userDto.getLoginName());
         if (user1 != null) {
             throw new MessageException("登录名已存在");
         }
+        User user = new User();
+        BeanUtil.copyProperties(userDto, user);
         user.setId(IdUtil.simpleUUID());
         user.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()).toLowerCase());
         user.setCreator(loginName);
-        return um.insert(user);
+        this.save(user);
     }
 
 

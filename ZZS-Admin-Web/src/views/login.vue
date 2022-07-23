@@ -34,7 +34,7 @@ export default {
         loginName: '',
         password: ''
       },
-      rememberMe:true,
+      rememberMe: true,
       rules: {
         loginName: [
           {required: true, message: '请输入用户名', trigger: 'blur'}
@@ -43,24 +43,22 @@ export default {
           {required: true, message: '请输入密码', trigger: 'blur'}
         ]
       },
-      loginLoading:false,
+      loginLoading: false,
     }
   },
   created() {
     let login = window.localStorage.getItem('login')
-    let rememberMe =  window.localStorage.getItem('rememberMe')
-    if (typeof (rememberMe) != "undefined"){
-      if (rememberMe == "true"){
+    let rememberMe = window.localStorage.getItem('rememberMe')
+    if (typeof (rememberMe) != "undefined") {
+      if (rememberMe == "true") {
         this.rememberMe = true;
-        if (typeof (login) != "undefined"){
+        if (typeof (login) != "undefined") {
           this.ruleForm = JSON.parse(login);
         }
-      }
-      else{
+      } else {
         this.rememberMe = false;
       }
-    }
-    else{
+    } else {
       this.rememberMe = true;
     }
     // if (typeof (login) != "undefined"){
@@ -77,26 +75,26 @@ export default {
         if (valid) {
           _this.$axios.post(_this.$api.login, _this.ruleForm).then(function (res) {
             if (res.errcode === 0) {
-              window.localStorage.setItem('token', res.token)
-              var userInfo = {
-                user_id: res.userId,
-                user_name: res.userName,
-                login_name: res.loginName
+              if (res.data) {
+                window.localStorage.setItem('token', res.data.token)
+                var userInfo = {
+                  user_id: res.data.userId,
+                  user_name: res.data.userName,
+                  login_name: res.data.loginName
+                }
+                window.localStorage.setItem("rememberMe", _this.rememberMe)
+                if (_this.rememberMe) {
+                  window.localStorage.setItem('login', JSON.stringify(_this.ruleForm));
+                  window.localStorage.setItem("rememberMe", _this.rememberMe)
+                } else {
+                  window.localStorage.removeItem('login')
+                }
+                window.localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                // 延迟一秒跳转，直接跳转有可能localstorage存储异常
+                setTimeout(function () {
+                  _this.$router.push('/index');
+                }, 1000);
               }
-              // eslint-disable-next-line no-debugger
-              window.localStorage.setItem("rememberMe",_this.rememberMe)
-              if (_this.rememberMe){
-                window.localStorage.setItem('login',JSON.stringify(_this.ruleForm));
-                window.localStorage.setItem("rememberMe",_this.rememberMe)
-              }else{
-                window.localStorage.removeItem('login')
-              }
-              window.localStorage.setItem('userInfo', JSON.stringify(userInfo));
-              //TODO：延迟一秒跳转，直接跳转有可能localstorage存储异常
-              setTimeout(function () {
-                _this.$router.push('/index');
-              }, 1000);
-
             } else {
               _this.$message({
                 showClose: true,

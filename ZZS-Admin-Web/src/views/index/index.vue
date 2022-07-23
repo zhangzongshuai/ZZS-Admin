@@ -1,231 +1,457 @@
 <template>
   <div class="home">
-
-
-    <el-row :gutter="10">
-      <el-col :span="16">
-
-        <el-card class="box-card" shadow="never">
-          <el-tabs v-model="activeName">
-            <el-tab-pane label="计划进度" name="plan">
-              <TheCharts id="chart1" :style="{width: '100%',height:'370px'}" v-if="activeName==='plan'"
-                         :option="finishedRateOption"></TheCharts>
-              <el-table
-                  v-if="activeName==='plan'"
-                  :data="tableData"
-                  :height="350"
-                  style="width: 100%"
-                  :cell-style="{padding:'10px 0'}"
-                  :row-style="rowStyle">
-                <el-table-column
-                    prop="name"
-                    label="油品"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="lastMonthCql"
-                    label="上月超欠"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="plan"
-                    label="配置计划"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="realPlan"
-                    label="实际计划"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="beforeAmount"
-                    label="前期完成量"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="dayAmount"
-                    label="当日完成量"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="totalAmount"
-                    label="累计完成量"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="cql"
-                    label="计划进度超欠"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="rate"
-                    label="完成率"
-                >
-                </el-table-column>
-              </el-table>
-            </el-tab-pane>
-            <el-tab-pane label="结算进度" name="settlement">
-              <TheCharts id="chart2" v-if="activeName==='settlement'" :style="{width: '100%',height:'370px'}"
-                         :option="settlementRateOption"></TheCharts>
-              <el-table
-                  v-if="activeName==='settlement'"
-                  :data="settlementTable"
-                  :height="350"
-                  style="width: 100%"
-                  :cell-style="{padding:'10px 0'}"
-                  :row-style="rowStyle">
-                <el-table-column
-                    prop="name"
-                    label="油品"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="lastMonthCql"
-                    label="上月累计超欠"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="plan"
-                    label="配置计划"
-                    width="160">
-                </el-table-column>
-                <el-table-column
-                    prop="realPlan"
-                    label="实际计划"
-                    width="160">
-                </el-table-column>
-                <el-table-column
-                    prop="finished"
-                    label="已结算量"
-                    min-width="160">
-                </el-table-column>
-                <el-table-column
-                    prop="unfinished"
-                    label="结算超欠"
-                    min-width="160">
-                </el-table-column>
-                <!--                <el-table-column-->
-                <!--                    prop="unfinished"-->
-                <!--                    label="未结算量"-->
-                <!--                    width="150">-->
-                <!--                </el-table-column>-->
-                <el-table-column
-                    prop="rate"
-                    label="结算完成率"
-                    width="120"
-                >
-                </el-table-column>
-              </el-table>
-            </el-tab-pane>
-          </el-tabs>
-
-        </el-card>
-      </el-col>
-
-      <el-col :span="8">
-        <el-card class="box-card" shadow="never" body-style="padding:0">
-          <div style="height: 200px">
-            <TheCharts id="chart6" :style="{width: '100%',height:'100%'}" :option="totalRateOption"></TheCharts>
-          </div>
-        </el-card>
-        <div style="height: 10px"></div>
-        <el-card class="box-card" shadow="never" body-style="padding:0">
-          <div style="height: 200px">
-            <TheCharts id="chart7" :style="{width: '100%',height:'100%'}"
-                       :option="settlementTotalRateOption"></TheCharts>
-          </div>
-        </el-card>
-        <div style="height: 10px"></div>
-        <el-card class="box-card" shadow="never">
-          <div>
-            <div
-                style="background-color: #66b1ff;height: 40px;line-height: 40px;font-weight: bold;font-size: 18px;text-align: center">
-              产品价格一览
-            </div>
-            <el-table
-                :data="productTableData"
-                height="310"
-                style="width: 100%">
-              <el-table-column
-                  type="index"
-                  label="#"
-                  width="50">
-              </el-table-column>
-              <el-table-column
-                  prop="name"
-                  label="名称">
-              </el-table-column>
-              <el-table-column
-                  prop="price"
-                  label="价格">
-              </el-table-column>
-            </el-table>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+    <div id="hello" style="width: 100%;height: 100%"></div>
   </div>
 </template>
 
 <script>
-import TheCharts from '@/components/TheCharts';
-import {formatDate} from "@/common";
-import {accMul} from "@/common/mathUtil";
 
 export default {
   name: "index",
   data() {
     return {
-      option: {},
-      tableData: [],
-      finishedRateOption: {},
-      totalRateOption: {},
-      settlementTable: [],
-      settlementRateOption: {},
-      settlementTotalRateOption: {},
-      activeName: 'plan',
-      productTableData: []
+
+
     }
   },
   created() {
-    this.getPlanProgress();
-    this.getSettlementProgress();
+
   },
   mounted() {
-    this.getProductData();
-    // this.testChart();
+    this.initChart();
   },
   methods: {
 
-    testChart() {
-      this.option = {
+    initChart() {
+      let MyEcharts = this.$echarts.init(document.getElementById('hello'));
+      // github: github.com/jackshawn/pics-by-echarts
+      let option = {
         title: {
-          text: '计划完成率'
+          text: '',
+          textStyle: {
+            color: '#555'
+          }
         },
-        tooltip: {},
-        xAxis: {
-          data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+        grid: {
+          left: '0',
+          right: '0',
+          bottom: '1%'
         },
-        yAxis: {},
+        backgroundColor: this.$echarts.graphic.RadialGradient(0.62, 0.45, 1, [{
+          offset: 0,
+          color: '#fe9e80'
+        }, {
+          offset: 1,
+          color: '#9bc9f1'
+        }], false),
+        xAxis: [{
+          boundaryGap: false,
+          data: new Array(15),
+          splitLine: {
+            show: false
+          }
+        }],
+        yAxis: [{
+          min: 0,
+          max: 10,
+          type: 'value',
+          splitLine: {
+            show: false
+          }
+
+        }],
         series: [{
-          name: '销量',
-          type: 'bar',
-          data: [5, 20, 36, 10, 10, 20]
+          //mountain background
+          type: 'line',
+          areaStyle: {
+            normal: {
+              color: '#2a9c91',
+              opacity: 0.4
+            }
+          },
+          data: [5, 5, 5, 6.1, 6.2, 6.3, 6.4, 6, 4, 4, 4, 4, 4, 4, 4],
+          symbolSize: 0,
+          lineStyle: {
+            normal: {
+              width: 0
+            }
+          }
+        }, {
+          //mountain behind
+          type: 'line',
+          areaStyle: {
+            normal: {
+              color: '#2a9c91',
+              opacity: 0.8
+            }
+          },
+          data: [4, 4, 4, 4, 4, 4, 4, 4, 3, 4.5, 5, 6, 6.5, 7, 7.2],
+          symbolSize: 0,
+          lineStyle: {
+            normal: {
+              width: 0
+            }
+          }
+        }, {
+          //river behind
+          type: 'line',
+          areaStyle: {
+            normal: {
+              color: '#2dc3b5',
+              opacity: 1
+            }
+          },
+          data: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+          symbolSize: 0,
+          lineStyle: {
+            normal: {
+              width: 0
+            }
+          }
+        }, {
+          //mountain left
+          type: 'line',
+          areaStyle: {
+            normal: {
+              color: '#0f6960',
+              opacity: 1
+            }
+          },
+          data: [6.5, 6, 6, 6, 5.8, 5.2, 4.8, 4.2, 2, 0, 0, 0, 0, 0, 0],
+          symbolSize: 0,
+          lineStyle: {
+            normal: {
+              width: 0
+            }
+          }
+        }, {
+          //river middle
+          type: 'line',
+          areaStyle: {
+            normal: {
+              color: '#2dc3b5',
+              opacity: 1
+            }
+          },
+          data: [2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8],
+          symbolSize: 0,
+          lineStyle: {
+            normal: {
+              width: 0
+            }
+          }
+        }, {
+          //mountain right
+          type: 'line',
+          areaStyle: {
+            normal: {
+              color: '#0f6960',
+              opacity: 1
+            }
+          },
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 4.8, 5, 5.5],
+          symbolSize: 0,
+          lineStyle: {
+            normal: {
+              width: 0
+            }
+          }
+        }, {
+          //river front
+          type: 'line',
+          areaStyle: {
+            normal: {
+              color: '#2dc3b5',
+              opacity: 0.8
+            }
+          },
+          data: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+          smooth: true,
+          smoothMonotone: 'x',
+          symbolSize: 0,
+          lineStyle: {
+            normal: {
+              width: 0
+            }
+          },
+          animationDelayUpdate: function (idx) {
+            return idx * 5;
+          }
+        }, {
+          type: 'graph',
+          data: [{
+            symbolSize: 0,
+            x: 0,
+            y: 0
+          }, {
+            symbolSize: 0,
+            x: 200,
+            y: 100
+          },
+            //sun
+            {
+              symbolSize: 100,
+              x: 130,
+              y: 45
+            },
+            //sun shadow
+            {
+              symbolSize: [40, 10],
+              symbolOffset: [0, 180],
+              x: 130,
+              y: 45,
+              itemStyle: {
+                normal: {
+                  opacity: 0.2
+                }
+              },
+            }, {
+              symbolSize: [100, 30],
+              symbolOffset: [0, 200],
+              x: 130,
+              y: 45,
+              itemStyle: {
+                normal: {
+                  opacity: 0.25
+                }
+              },
+            }, {
+              symbolSize: [60, 20],
+              symbolOffset: [0, 225],
+              x: 130,
+              y: 45,
+              itemStyle: {
+                normal: {
+                  opacity: 0.2
+                }
+              },
+            }, {
+              symbolSize: [20, 10],
+              symbolOffset: [0, 245],
+              x: 130,
+              y: 45,
+              itemStyle: {
+                normal: {
+                  opacity: 0.2
+                }
+              },
+            }
+          ],
+          itemStyle: {
+            normal: {
+              color: '#ff5722',
+              shadowColor: '#ff5722',
+              shadowBlur: 100
+            }
+          },
+          silent: true,
+          z: 3
+        }, {
+          //boat
+          type: 'graph',
+          data: [{
+            symbolSize: 0,
+            x: 0,
+            y: 0
+          }, {
+            symbolSize: 0,
+            x: 200,
+            y: 100
+          }, {
+            symbolSize: [35, 40],
+            symbolOffset: [20, 120],
+            x: 130,
+            y: 45,
+            itemStyle: {
+              normal: {
+                color: '#333',
+              }
+            },
+            symbol: 'path://M27.310007,2.749997l22.5,0c-2.485281,0 -4.5,14.326891 -4.5,32.000002c0,17.673113 2.014718,32 4.5,32l-22.5,0l0,0c-2.485281,0 -4.5,-14.326889 -4.5,-32c0,-17.673111 2.014718,-32.000002 4.5,-32.000002z M12.75,70.184998l47,0l-11,10l-30,-1l-6,-9z',
+          }, {
+            //boat shadow
+            symbolSize: [30, 5],
+            symbolOffset: [19, 142],
+            x: 130,
+            y: 45,
+            itemStyle: {
+              normal: {
+                color: '#333',
+                opacity: 0.1
+              }
+            },
+            symbol: 'roundRect'
+          }, {
+            symbolSize: [18, 15],
+            x: 130,
+            y: 45,
+            itemStyle: {
+              normal: {
+                color: '#333',
+                opacity: 0.1
+              }
+            },
+            symbolRotate: 2,
+            symbolOffset: [20, 151],
+            symbol: 'roundRect'
+          },
+            //wave
+            {
+              name: 'wave1',
+              symbolSize: 0,
+              x: 126,
+              y: 86
+            }, {
+              name: 'wave2',
+              symbolSize: 0,
+              x: 130,
+              y: 86
+            }, {
+              name: 'wave3',
+              symbolSize: 0,
+              x: 130,
+              y: 93
+            }, {
+              name: 'wave4',
+              symbolSize: 0,
+              x: 134,
+              y: 93
+            }, {
+              name: 'wave5',
+              symbolSize: 0,
+              x: 144,
+              y: 90
+            }, {
+              name: 'wave6',
+              symbolSize: 0,
+              x: 148,
+              y: 90
+            }
+          ],
+          links: [{
+            source: 'wave1',
+            target: 'wave2'
+          }, {
+            source: 'wave3',
+            target: 'wave4'
+          }, {
+            source: 'wave5',
+            target: 'wave6'
+          }],
+          lineStyle: {
+            normal: {
+              width: 1,
+              curveness: 0.45,
+              color: '#0f6960'
+            }
+          },
+          silent: true,
+          symbolRotate: -2,
+          z: 3
+        }, {
+          //birds
+          type: 'graph',
+          data: [
+            //bg
+            {
+              symbolSize: 0,
+              x: 0,
+              y: 0,
+            }, {
+              symbolSize: 0,
+              x: 200,
+              y: 100,
+            },
+            //bird1
+            {
+              symbolSize: 0,
+              x: 120,
+              y: 50,
+              name: 'first-bird-left'
+            }, {
+              symbolSize: 3,
+              x: 125,
+              y: 52,
+              name: 'first-bird'
+            }, {
+              symbolSize: 0,
+              x: 130,
+              y: 50,
+              name: 'first-bird-right'
+            },
+            //bird2
+            {
+              symbolSize: 0,
+              x: 110,
+              y: 43,
+              name: 'second-bird-left'
+            }, {
+              symbolSize: 2,
+              x: 115,
+              y: 45,
+              name: 'second-bird'
+            }, {
+              symbolSize: 0,
+              x: 120,
+              y: 43,
+              name: 'second-bird-right'
+            },
+            //bird3
+            {
+              symbolSize: 0,
+              x: 112,
+              y: 52,
+              name: 'third-bird-left'
+            }, {
+              symbolSize: 2,
+              x: 115,
+              y: 53,
+              name: 'third-bird'
+            }, {
+              symbolSize: 0,
+              x: 118,
+              y: 52,
+              name: 'third-bird-right'
+            }
+          ],
+          links: [{
+            source: 'first-bird-left',
+            target: 'first-bird'
+          }, {
+            source: 'first-bird',
+            target: 'first-bird-right'
+          }, {
+            source: 'second-bird-left',
+            target: 'second-bird'
+          }, {
+            source: 'second-bird',
+            target: 'second-bird-right'
+          }, {
+            source: 'third-bird-left',
+            target: 'third-bird'
+          }, {
+            source: 'third-bird',
+            target: 'third-bird-right'
+          },],
+          lineStyle: {
+            normal: {
+              width: 1,
+              curveness: 0.3,
+              color: '#333'
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#555'
+            }
+          },
+          silent: true,
+          z: 4
         }]
       }
+      MyEcharts.setOption(option);
     },
 
-    getProductData() {
-      let that = this;
-      that.$axios.get(that.$api.getProductList).then(res => {
-        if (res.errcode === 0) {
-          that.productTableData = res.datas;
-          // that.scrollContent(res.datas);
-        } else {
-          console.log(res.errmsg);
-        }
-      })
-    },
 
     scrollContent(data) {
       let content = "";
@@ -276,303 +502,8 @@ export default {
         MyMar = setInterval(Marquee, speed)
       }
     },
-    getPlanProgress() {
-      let _this = this;
-      var dateStr = formatDate(new Date(), "Y-m");
-      let params = {
-        monthDate: dateStr
-      }
-      _this.$axios.get(_this.$api.planProgress, {params}).then(function (res) {
-        if (res.errcode === 0) {
-          _this.tableData = res.datas;
-          _this.buildFinishedRateChart(res.datas);
-        } else {
-          _this.$message.error(res.errmsg);
-        }
-      });
 
-    },
-    rowStyle(obj) {
-      if (obj.row.name == '汽油' || obj.row.name == '柴油') {
-        return {
-          backgroundColor: "#cfd6d7",
-          fontSize: "16px",
-          fontWeight: '1000'
-        }
-      }
-
-    },
-
-    buildFinishedRateChart(data) {
-      let xData = [];
-      let tempData = data.filter(item => {
-        if (item.name != '汽油' && item.name != '柴油') {
-          return item;
-        }
-      })
-      xData = tempData.map(item => item.name);
-      let yData1 = tempData.map(item => item.plan);
-      let yData2 = tempData.map(item => item.totalAmount);
-
-
-      this.finishedRateOption = {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
-        legend: {
-          data: ['计划量', '完成量']
-        },
-        xAxis: {
-          data: xData
-        },
-        yAxis: {},
-        series: [{
-          name: '计划量',
-          type: 'bar',
-          data: yData1,
-          color: '#38A0FF'
-        },
-          {
-            name: '完成量',
-            type: 'bar',
-            data: yData2,
-            color: '#91CC75'
-          }]
-      };
-
-      let qyRate = data.filter(item => {
-        if (item.name == '汽油') {
-          return item;
-        }
-      });
-      let cyRate = data.filter(item => {
-        if (item.name == '柴油') {
-          return item;
-        }
-      });
-      let shuiwen1 = [];
-      let shuiwen2 = [];
-      for (let i = 0; i < 5; i++) {
-        shuiwen1.push(qyRate[0].rate);
-        shuiwen2.push(cyRate[0].rate);
-      }
-      this.totalRateOption = {
-        series: [{
-          type: 'liquidFill',
-          radius: '70%',
-          color: ['#38A0FF'],
-          center: ['25%', '50%'],
-          data: shuiwen1,
-          backgroundStyle: {
-            borderWidth: 1,
-            borderColor: '#1789fb',
-            color: '#1c233f',
-          },
-          outline: {
-            itemStyle: {
-              borderWidth: 2,
-              borderColor: '#1789fb',
-              borderType: 'dashed',
-            }
-          },
-          label: {
-            normal: {
-              formatter: (obj) => {
-                return (obj.data * 100) + '%\n\n\n' + '汽油计划完成率'
-              },
-              textStyle: {
-                fontSize: 14,
-                color: '#e6e6e6',
-              },
-            },
-          },
-        },
-          {
-            type: 'liquidFill',
-            radius: '70%',
-            color: ['#38A0FF'],
-            center: ['70%', '50%'],
-            data: shuiwen2,
-            backgroundStyle: {
-              borderWidth: 1,
-              borderColor: '#1789fb',
-              color: '#1c233f',
-            },
-            outline: {
-              itemStyle: {
-                borderWidth: 2,
-                borderColor: '#1789fb',
-                borderType: 'dashed',
-              }
-            },
-            label: {
-              normal: {
-                formatter: (obj) => {
-                  return (obj.data * 100) + '%\n\n\n柴油计划完成率';
-                },
-                textStyle: {
-                  fontSize: 14,
-                  color: '#e6e6e6',
-                },
-              },
-            },
-
-          },
-
-        ]
-      };
-
-
-    },
-    getSettlementProgress() {
-
-      let _this = this;
-      var dateStr = formatDate(new Date(), "Y-m");
-      let params = {
-        monthDate: dateStr
-      }
-      _this.$axios.get(_this.$api.settlementProgress, {params}).then(function (res) {
-        if (res.errcode === 0) {
-          _this.settlementTable = res.datas;
-          _this.buildSettlementRateChart(res.datas);
-        } else {
-          _this.$message.error(res.errmsg);
-        }
-      });
-
-    },
-    buildSettlementRateChart(data) {
-      let xData = [];
-      let tempData = data.filter(item => {
-        if (item.name != '汽油' && item.name != '柴油') {
-          return item;
-        }
-      })
-      xData = tempData.map(item => item.name);
-      let yData1 = tempData.map(item => item.plan);
-      let yData2 = tempData.map(item => item.finished);
-
-
-      this.settlementRateOption = {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
-        legend: {
-          data: ['计划量', '完成量']
-        },
-        xAxis: {
-          data: xData
-        },
-        yAxis: {},
-        series: [{
-          name: '计划量',
-          type: 'bar',
-          data: yData1,
-          color: '#38A0FF'
-        },
-          {
-            name: '完成量',
-            type: 'bar',
-            data: yData2,
-            color: '#91CC75'
-          }]
-      };
-
-      let qyRate = data.filter(item => {
-        if (item.name == '汽油') {
-          return item;
-        }
-      });
-      let cyRate = data.filter(item => {
-        if (item.name == '柴油') {
-          return item;
-        }
-      });
-      let shuiwen1 = [];
-      let shuiwen2 = [];
-      for (let i = 0; i < 5; i++) {
-        shuiwen1.push(qyRate[0].rate);
-        shuiwen2.push(cyRate[0].rate);
-      }
-      this.settlementTotalRateOption = {
-        series: [{
-          type: 'liquidFill',
-          radius: '70%',
-          color: ['#38A0FF'],
-          center: ['25%', '50%'],
-          data: shuiwen1,
-          backgroundStyle: {
-            borderWidth: 1,
-            borderColor: '#1789fb',
-            color: '#1c233f',
-          },
-          outline: {
-            itemStyle: {
-              borderWidth: 2,
-              borderColor: '#1789fb',
-              borderType: 'dashed',
-            }
-          },
-          label: {
-            normal: {
-              formatter: (obj) => {
-                return accMul(obj.data , 100) + '%\n\n\n' + '汽油结算完成率'
-              },
-              textStyle: {
-                fontSize: 14,
-                color: '#e6e6e6',
-              },
-            },
-          },
-        },
-          {
-            type: 'liquidFill',
-            radius: '70%',
-            color: ['#38A0FF'],
-            center: ['70%', '50%'],
-            data: shuiwen2,
-            backgroundStyle: {
-              borderWidth: 1,
-              borderColor: '#1789fb',
-              color: '#1c233f',
-            },
-            outline: {
-              itemStyle: {
-                borderWidth: 2,
-                borderColor: '#1789fb',
-                borderType: 'dashed',
-              }
-            },
-            label: {
-              normal: {
-                formatter: (obj) => {
-                  return (obj.data * 100) + '%\n\n柴油结算完成率';
-                },
-                textStyle: {
-                  fontSize: 14,
-                  color: '#e6e6e6',
-                },
-              },
-            },
-
-          },
-
-        ]
-      };
-
-
-    },
   },
-  components: {
-    'TheCharts': TheCharts
-  }
-
 }
 </script>
 <style scoped>

@@ -44,9 +44,9 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "no-debugger":"off",
-    "no-console":"off"
-  }
+      "no-debugger": "off",
+      "no-console": "off"
+    }
   },
   "browserslist": [
     "> 1%",

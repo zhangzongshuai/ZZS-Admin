@@ -55,10 +55,7 @@ public class RoleController {
     @ApiOperation(value = "添加角色")
     @PostMapping("/add")
     public BaseResultData addRole(@RequestBody RoleDto dto, @RequestParam String loginName) {
-        AssertUtil.valid(loginName, "loginName", "参数错误");
-        Role role = new Role();
-        BeanUtil.copyProperties(dto, role);
-        roleService.addRole(role, loginName);
+        roleService.addRole(dto, loginName);
         return new BaseResultData();
     }
 
@@ -172,7 +169,7 @@ public class RoleController {
     }
 
     @ApiOperation(value = "角色配置用户")
-    @PostMapping("/configroleuser")
+    @PostMapping("/configRoleUser")
     public BaseResultData configRoleUser(@RequestBody List<String> userIds, @RequestParam String roleId) {
         BaseResultData res = new BaseResultData();
         roleUserService.configRoleUser(userIds, roleId);

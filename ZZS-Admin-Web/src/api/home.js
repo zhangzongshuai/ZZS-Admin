@@ -6,6 +6,6 @@ export const home = {
 
     logout: api + 'logout',
 
-    getUserMenu: api + 'menu/usermenu',
+    getUserMenu: api + 'menuManager/userMenu',
 
 }

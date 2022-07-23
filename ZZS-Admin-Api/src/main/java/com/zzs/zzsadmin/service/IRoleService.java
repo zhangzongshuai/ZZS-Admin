@@ -9,10 +9,10 @@ import com.zzs.zzsadmin.entity.Role;
 public interface IRoleService  extends IService<Role> {
     /**
      * 新增角色
-     * @param role
+     * @param roleDto
      * @param loginName
      */
-    void addRole(Role role,String loginName);
+    void addRole(RoleDto roleDto,String loginName);
 
     /**
      * 分页查询角色

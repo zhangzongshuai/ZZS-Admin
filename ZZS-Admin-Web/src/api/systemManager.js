@@ -3,31 +3,33 @@
  */
 
 let oilApi = '/api/oil/'
-let userApi = '/api/user/'
+let userApi = '/api/userManager/'
 let oilTypeApi = '/api/oiltype/'
 let stationApi = '/api/station/'
-let menuApi = '/api/menu/'
-let roleApi = '/api/role/'
+let menuApi = '/api/menuManager/'
+let roleApi = '/api/roleManager/'
 let provinceApi = '/api/province/'
 
 export const systemApi = {
 
     //user用户管理
-    getUsers: userApi + 'pagelist',
+    getUsers: userApi + 'pageList',
 
     modifyPassworld: userApi + 'modifyPassword',
 
-    resetPwd: userApi + 'resetpwd',
+    resetPwd: userApi + 'resetPassword',
 
-    deleteUser: userApi + 'deleteuser',
+    deleteUser: userApi + 'deleteUser',
 
     addUser: userApi + 'addUser',
 
     getUser: userApi + 'user',
 
-    modifyUser: userApi + 'modifyuser',
+    modifyUser: userApi + 'modifyUser',
 
-    configUserRole : userApi + 'configuserrole',
+    configUserRole : userApi + 'configUserRoles',
+
+    getUserRoles : userApi + 'rolesByUserId',
 
     //station 车站管理
     getStationList: stationApi + "list",
@@ -64,7 +66,7 @@ export const systemApi = {
     getOil :oilApi + 'oil',
 
     //菜单管理
-    getMenus: menuApi + 'pagelist',
+    getMenus: menuApi + 'pageList',
 
     addMenu: menuApi + 'add',
 
@@ -72,31 +74,31 @@ export const systemApi = {
 
     modifyMenu: menuApi + 'modify',
 
-    getMenuTree: menuApi + 'menutree',
+    getMenuTree: menuApi + 'menuTree',
 
     getMenu: menuApi + 'menu',
 
     //角色管理
 
-    getRoles: roleApi + "pagelist",
+    getRoles: roleApi + "pageList",
 
     getRole: roleApi + "role",
 
     deleteRole: roleApi + 'delete',
 
-    modifyRole: roleApi + 'modify',
+    modifyRole: roleApi + 'modifyRole',
 
     addRole: roleApi + 'add',
 
-    getRoleMenus: roleApi + 'rolemenus',
+    getRoleMenus: roleApi + 'roleMenus',
 
-    configRoleMenu: roleApi + 'configrolemenu',
+    configRoleMenu: roleApi + 'configRoleMenu',
 
     getRoleUsers: roleApi + 'usersByRoleId',
 
-    configRoleUser: roleApi + 'configroleuser',
+    configRoleUser: roleApi + 'configRoleUser',
 
-    getUserRoles : roleApi + 'rolesByUserId',
+
 
     //省份管理
     getProvinces: provinceApi + 'pageList',

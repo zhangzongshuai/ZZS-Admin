@@ -243,10 +243,10 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        _this.$axios.delete(_this.$api.deleteUser + '/' + id + '/' + userInfo.login_name).then(function (res) {
+        _this.$axios.delete(_this.$api.deleteUser + '/' + id + '?loginName=' + userInfo.login_name).then(function (res) {
           if (res.errcode === 0) {
             _this.$message.success("删除成功");
-            _this.getUser();
+            _this.getUsers();
           } else {
             _this.$message.error(res.errmsg);
           }
