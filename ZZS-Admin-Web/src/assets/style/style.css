@@ -1,0 +1,160 @@
+
+body {
+
+    background: #F5F7FA;
+}
+body .c-danger {
+    color: #F56C6C;
+}
+
+body .c-primary {
+    color: #3B91FF;
+}
+
+
+body .header {
+    background: #0472C6;
+}
+
+
+body .pLabel {
+    border-left: 3px solid #3B91FF;
+    color: #3B91FF;
+}
+
+
+body .crumbs {
+    background: #F5F7FA;
+    border-bottom: 1px solid #DCDFE6;
+}
+
+body .rightPanel {
+    border-right: 4px solid #3B91FF;
+    background: #324157;
+    color: #FFFFFF;
+}
+body .handle-button {
+    background: #3B91FF;
+    color: #FFFFFF;
+}
+
+body .el-radio {
+    color: #C0CBDA
+}
+
+
+
+/*!*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*!*/
+/*::-webkit-scrollbar {*/
+/*    width: 10px;*/
+/*    height: 6px;*/
+/*    background-color: rgba(0, 0, 0, 0);*/
+/*    border-bottom: 1px dashed rgba(0, 0, 0, 0.2);*/
+/*}*/
+
+/*!*定义滚动条轨道 内阴影+圆角*!*/
+/*::-webkit-scrollbar-track {*/
+/*    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);*/
+/*    border-radius: 5px;*/
+/*    background-color: rgba(0, 0, 0, 0);*/
+/*}*/
+
+/*!*定义滑块 内阴影+圆角*!*/
+/*::-webkit-scrollbar-thumb {*/
+/*    border-radius: 5px;*/
+/*    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.15);*/
+/*    background-color: #DCDFE6;*/
+/*}*/
+
+
+/*修改框架本身的样式
+----------------------------------------------------------------------------------*/
+/*Menu*/
+/*.el-menu {*/
+/*    background: #324157;*/
+/*    border: none;*/
+/*}*/
+
+/*.el-menu-item {*/
+/*    color: #C0CBDA;*/
+/*}*/
+
+/*.el-menu-item i {*/
+/*    color: inherit;*/
+/*}*/
+
+/*.el-submenu__title {*/
+/*    color: #C0CBDA;*/
+/*}*/
+
+/*.el-submenu__title i {*/
+/*    color: inherit;*/
+/*}*/
+
+/*.el-submenu__title:hover {*/
+/*    background-color: rgba(0, 0, 0, .2);*/
+/*}*/
+
+/*button*/
+.el-button + .el-button {
+    margin-left: 10px;
+}
+
+/*card*/
+.el-card {
+    height: 100%;
+}
+
+.el-card__header {
+    height: 50px;
+    line-height: 50px;
+    padding: 0 15px !important;
+    background: #fff;
+}
+
+/*Checkbox,radio*/
+.el-range-input, .el-checkbox__inner, .el-radio__inner {
+    background-color: #fff;
+    border-color: #DCDFE6;
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-radio__input.is-checked .el-radio__inner {
+    border-color: #3B91FF;
+    background-color: #3B91FF;
+}
+
+.el-checkbox__input.is-checked + .el-checkbox__label, .el-radio__input.is-checked + .el-radio__label {
+    color: #3B91FF;
+}
+
+.el-checkbox {
+    margin-right: 8px;
+}
+
+/* Table*/
+.el-table th {
+    padding: 10px 0;
+    background: #fff;
+}
+
+/*pagination*/
+.pagination {
+    text-align: right;
+}
+.pagination .el-pagination__total {
+    float: left;
+}
+
+/*去掉表格上的全选框*/
+.noCheckTable .el-table__header-wrapper  .el-checkbox{
+display:none
+}
+
+/*侧边导航图标颜色*/
+.el-menu-item i{
+    color: rgb(191, 203, 217) !important;
+}
+
+.el-submenu__title i{
+    color: rgb(191, 203, 217) !important;
+}
