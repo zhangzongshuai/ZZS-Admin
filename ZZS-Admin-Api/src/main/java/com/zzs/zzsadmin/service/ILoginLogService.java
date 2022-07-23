@@ -1,5 +1,6 @@
 package com.zzs.zzsadmin.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zzs.zzsadmin.entity.LoginLog;
 
@@ -11,5 +12,6 @@ import com.zzs.zzsadmin.entity.LoginLog;
  */
 public interface ILoginLogService extends IService<LoginLog> {
 
+    IPage<LoginLog> getLoginLogPage(Long pageNum, Long pageSize, String userName, String startTime, String endTime);
 }
 

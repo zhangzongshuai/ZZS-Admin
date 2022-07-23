@@ -1,14 +1,13 @@
 
-let api = "/api/accesslog/"
-let loginLogApi = "/api/loginlog/"
+let api = "/api/logManager/"
 
 
 
 export const logApi = {
-    getAccessLog : api + 'pagelist',
+    getAccessLog : api + 'accessLogPage',
 
-    addAccessLog : api + 'add',
+    addAccessLog : api + 'addAccessLog',
 
-    getLoginLog : loginLogApi + 'pagelist',
+    getLoginLog : api + 'loginLogPage',
 }
 

@@ -5,6 +5,9 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.zzs.zzsadmin.annotation.IgnoreToken;
 import com.zzs.zzsadmin.common.utils.JWTUtil;
+import com.zzs.zzsadmin.entity.User;
+import com.zzs.zzsadmin.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,6 +24,9 @@ import java.util.Date;
  * @date
  */
 public class AuthenticationInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    private IUserService userService;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
@@ -51,7 +57,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             DecodedJWT decodedJWT = JWTUtil.deToken(token);
             username = decodedJWT.getClaim("username").asString();
             expiresAt = decodedJWT.getExpiresAt();
-            if (expiresAt.getTime() < new Date().getTime()) {
+            if (expiresAt.getTime() < System.currentTimeMillis()) {
                 httpServletResponse.setStatus(401);
                 return false;
             }
@@ -62,16 +68,17 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             httpServletResponse.setStatus(401);
             return false;
         }
-//
-//        User user = userService.getUserByLoginName(username);
-//        if (user == null) {
-//            httpServletResponse.setStatus(401);
-//            return false;
-//        }
-//        if (user.getIsEnabled() != 1) {
-//            httpServletResponse.setStatus(401);
-//            return false;
-//        }
+
+
+        User user = userService.getUserByLoginName(username);
+        if (user == null) {
+            httpServletResponse.setStatus(401);
+            return false;
+        }
+        if (user.getIsEnabled() != 1) {
+            httpServletResponse.setStatus(401);
+            return false;
+        }
         return true;
     }
 

@@ -6,21 +6,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zzs.zzsadmin.common.utils.CopyUtil;
-import com.zzs.zzsadmin.dto.RoleDto;
-import com.zzs.zzsadmin.entity.Role;
 import com.zzs.zzsadmin.entity.Role_User;
 import com.zzs.zzsadmin.mapper.RoleUserMapper;
 import com.zzs.zzsadmin.service.IRoleUserService;
-import com.zzs.zzsadmin.vo.Role.RoleUserVo;
-import com.zzs.zzsadmin.vo.Role.UserRoleVo;
+import com.zzs.zzsadmin.vo.role.RoleUserVo;
+import com.zzs.zzsadmin.vo.role.UserRoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class RoleUserService extends ServiceImpl<RoleUserMapper, Role_User> implements IRoleUserService {

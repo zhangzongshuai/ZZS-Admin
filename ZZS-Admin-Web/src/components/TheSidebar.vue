@@ -74,7 +74,7 @@ export default {
           operator: userInfo.user_name,
           operatorId: userInfo.id,
           operatorLoginName: userInfo.login_name,
-          requestUrl: newVal.fullPath,
+          requestUrl: newVal.path,
         };
         if (localStorage.getItem("token"))
           this.$axios.post(this.$api.addAccessLog, params).then(() => {
@@ -93,12 +93,12 @@ export default {
     },
     // 选中菜单的方法
     selectFn(index, indexPath) {
+      debugger
       console.log(indexPath)
       if (!indexPath) {
         return;
       }
-      let title = "1234"
-      this.$router.push({path: index, params: {title}})
+      this.$router.push({path: index})
       this.activeIndex = index;
       // 如果是点击的菜单，把keepAlive的缓存清掉，使得从菜单点进去的页面都是没有缓存的
       //this.$store.dispatch('clearKeepAlive')

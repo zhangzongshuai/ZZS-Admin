@@ -13,7 +13,7 @@ import com.zzs.zzsadmin.dto.user.UserDto;
 import com.zzs.zzsadmin.entity.User;
 import com.zzs.zzsadmin.service.IRoleUserService;
 import com.zzs.zzsadmin.service.IUserService;
-import com.zzs.zzsadmin.vo.Role.UserRoleVo;
+import com.zzs.zzsadmin.vo.role.UserRoleVo;
 import com.zzs.zzsadmin.vo.user.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

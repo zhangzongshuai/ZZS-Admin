@@ -78,6 +78,8 @@ export const systemApi = {
 
     getMenu: menuApi + 'menu',
 
+    getUserMenu: menuApi + 'userMenu',
+
     //角色管理
 
     getRoles: roleApi + "pageList",

@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zzs.zzsadmin.mapper.RoleUserMapper">
 
-    <select id="getUsersByRoleId" resultType="com.zzs.zzsadmin.vo.Role.RoleUserVo">
+    <select id="getUsersByRoleId" resultType="com.zzs.zzsadmin.vo.role.RoleUserVo">
         select
         u.id id,
         u.`name` name,
@@ -21,7 +21,7 @@
         ORDER BY isAssign desc,login_name
     </select>
 
-    <select id="getRolesByUserId" resultType="com.zzs.zzsadmin.vo.Role.UserRoleVo">
+    <select id="getRolesByUserId" resultType="com.zzs.zzsadmin.vo.role.UserRoleVo">
         select
             r.id id,
             r.`name` name,

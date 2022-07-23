@@ -6,7 +6,7 @@
       <i class="el-icon-menu"></i>
 <!--      <img  src="../../public/favicon.jpg" style="width: 50px;height: 50px" alt="logo">-->
     </div>
-    <div class="logo">沧州成品油结算管理系统</div>
+    <div class="logo">ZZS后台管理系统</div>
     <div class="header-right">
       <div class="header-user-con">
         <div class="btn-fullscreen" @click="handleFullScreen">

@@ -2,10 +2,8 @@ package com.zzs.zzsadmin.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zzs.zzsadmin.common.utils.AssertUtil;
-import com.zzs.zzsadmin.common.utils.CopyUtil;
 import com.zzs.zzsadmin.common.vo.BaseResultData;
 import com.zzs.zzsadmin.common.vo.PageResult;
 import com.zzs.zzsadmin.common.vo.ResultData;
@@ -13,13 +11,11 @@ import com.zzs.zzsadmin.common.vo.ResultDataList;
 import com.zzs.zzsadmin.dto.RoleDto;
 import com.zzs.zzsadmin.entity.Role;
 import com.zzs.zzsadmin.entity.Role_Menu;
-import com.zzs.zzsadmin.entity.Role_User;
 import com.zzs.zzsadmin.service.IRoleMenuService;
 import com.zzs.zzsadmin.service.IRoleService;
 import com.zzs.zzsadmin.service.IRoleUserService;
 import com.zzs.zzsadmin.service.IUserService;
-import com.zzs.zzsadmin.vo.Role.RoleUserVo;
-import com.zzs.zzsadmin.vo.Role.UserRoleVo;
+import com.zzs.zzsadmin.vo.role.RoleUserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Api(tags = "角色管理")
 @RestController
