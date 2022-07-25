@@ -2,7 +2,9 @@ package com.zzs.zzsadmin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -31,7 +33,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
+public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
     @Autowired
     MenuMapper menuMapper;
     @Autowired
@@ -63,6 +65,7 @@ public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuS
 
     /**
      * TODO 删除权限关系
+     *
      * @param id
      */
     @Override
@@ -76,6 +79,17 @@ public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuS
             throw new MessageException("该菜单下有子菜单,请先移除后再删除");
         }
         this.removeById(id);
+    }
+
+    @Override
+    public void modifyMenu(MenuVo menuVo, String loginName) {
+        Menu menu = this.getById(menuVo.getId());
+        if (menu == null) {
+            throw new MessageException("数据不存在,请刷新重试");
+        }
+        BeanUtil.copyProperties(menuVo, menu);
+        menu.setModifier(loginName);
+        this.updateById(menu);
     }
 
     @Override
@@ -161,7 +175,7 @@ public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuS
 
     private List<UserMenuTreeDto> BuildUserMenuTree(List<Menu> list, String pid) {
         List<UserMenuTreeDto> childrenList = new ArrayList<>();
-        List<Menu> parentList = new ArrayList<>();
+        List<Menu> parentList;
         if (pid == "0") {
             parentList = list.stream()
                     .filter(s -> Objects.equals(s.getParentId(), "0") || Objects.equals(s.getParentId(), "") || Objects.equals(s.getParentId(), null))
@@ -178,6 +192,7 @@ public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuS
                 dto.setId(o.getId());
                 dto.setTitle(o.getName());
                 dto.setUrl(o.getUrl() + "?title=" + o.getName());
+                dto.setIconCode(o.getIconCode());
                 dto.setChildren(child.isEmpty() ? null : child);
                 childrenList.add(dto);
 

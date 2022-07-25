@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class RoleMenuService extends ServiceImpl<RoleMenuMapper, Role_Menu> implements IRoleMenuService {
+public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, Role_Menu> implements IRoleMenuService {
     @Override
     public List<Role_Menu> getMenusByRoleId(String roleId) {
         List<Role_Menu> menuIds = this.list(new QueryWrapper<Role_Menu>().eq("role_id", roleId));

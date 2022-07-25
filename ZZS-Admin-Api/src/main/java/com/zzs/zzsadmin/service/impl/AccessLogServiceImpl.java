@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @date 2021-01-20 23:06:15
  */
 @Service
-public class AccessLogService extends ServiceImpl<AccessLogMapper, AccessLog> implements IAccessLogService {
+public class AccessLogServiceImpl extends ServiceImpl<AccessLogMapper, AccessLog> implements IAccessLogService {
 
 
     /**

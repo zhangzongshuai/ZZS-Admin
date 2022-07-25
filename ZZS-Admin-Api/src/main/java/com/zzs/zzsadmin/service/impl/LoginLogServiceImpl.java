@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @date 2021-01-22 10:30:33
  */
 @Service
-public class LoginLogService extends ServiceImpl<LoginLogMapper, LoginLog> implements ILoginLogService {
+public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> implements ILoginLogService {
     @Override
     public IPage<LoginLog> getLoginLogPage(Long pageNum, Long pageSize, String userName, String startTime, String endTime) {
         IPage<LoginLog> page = new Page<>(pageNum, pageSize);

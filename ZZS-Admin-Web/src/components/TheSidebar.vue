@@ -12,8 +12,7 @@
         <template v-if="item.children">
           <el-submenu :index="item.url" :key="item.url">
             <template slot="title">
-              <!--              <i :class="['iconfont','mr5','el-icon-folder']"></i><span slot="title">{{ item.title }}</span>-->
-              <i class="el-icon-folder"></i><span  slot="title">{{ item.title }}</span>
+              <i :class="item.iconCode"></i><span  slot="title">{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.children">
               <el-submenu v-if="subItem.children" :index="subItem.url" :key="subItem.url">
@@ -23,14 +22,14 @@
                 </el-menu-item>
               </el-submenu>
               <el-menu-item v-else :index="subItem.url" :key="subItem.url">
-                <i class="el-icon-document"></i> <span  slot="title">{{ subItem.title }}</span>
+                <i :class="subItem.iconCode"></i> <span  slot="title">{{ subItem.title }}</span>
               </el-menu-item>
             </template>
           </el-submenu>
         </template>
         <template v-else>
           <el-menu-item :index="item.url" :key="item.url">
-            <i class="el-icon-folder"></i><span slot="title">{{ item.title }}</span>
+            <i :class="item.iconCode"></i><span slot="title">{{ item.title }}</span>
           </el-menu-item>
         </template>
       </template>

@@ -21,17 +21,28 @@
         <el-table-column
             type="index"
             label="#"
+            align="center"
             width="50">
         </el-table-column>
         <el-table-column
             prop="name"
             label="菜单名称"
-            width="180">
+            min-width="180">
         </el-table-column>
         <el-table-column
             prop="url"
             label="URL地址"
-            width="180">
+            min-width="180">
+        </el-table-column>
+        <el-table-column
+            prop="iconCode"
+            label="图标"
+            header-align="center"
+            align="center"
+            width="100">
+          <template slot-scope="scope">
+            <i :class="scope.row.iconCode"></i>
+          </template>
         </el-table-column>
         <el-table-column
             prop="orderId"
@@ -71,7 +82,6 @@
     </el-card>
 
     <el-dialog
-        v-if="dialogShow"
         v-dialogDrag
         :close-on-click-modal="false"
         :title="dialogTitle"
@@ -80,8 +90,8 @@
 
       <el-form ref="userForm" :model="menuForm" :rules="menuRules" label-width="80px" size="small">
 
-        <el-form-item label="菜单名" prop="name">
-          <el-input v-model="menuForm.name"></el-input>
+        <el-form-item label="菜单名称" prop="name">
+          <el-input v-model="menuForm.name" placeholder="请输入菜单名称"></el-input>
         </el-form-item>
         <el-form-item label="是否菜单">
           <el-switch v-model="menuForm.isMenu" :active-value="1" :inactive-value="0"></el-switch>
@@ -95,7 +105,12 @@
               placeholder="请选择父级菜单"/>
         </el-form-item>
         <el-form-item label="URL" prop="url">
-          <el-input v-model="menuForm.url"></el-input>
+          <el-input v-model="menuForm.url" placeholder="请输入url"></el-input>
+        </el-form-item>
+        <el-form-item label="图标" prop="iconCode">
+          <el-input placeholder="请点击选择图标" v-model="menuForm.iconCode">
+            <el-button slot="append" type="primary" icon="el-icon-s-tools" @click="chooseIcon"></el-button>
+          </el-input>
         </el-form-item>
         <el-form-item label="是否启用">
           <el-switch v-model="menuForm.isEnabled" :active-value="1" :inactive-value="0"></el-switch>
@@ -107,9 +122,33 @@
 
 
       <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogShow = false" size="small">取 消</el-button>
-    <el-button type="primary" @click="submit()" size="small">确 定</el-button>
-  </span>
+        <el-button @click="dialogShow = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="submit()" size="small">确 定</el-button>
+      </span>
+    </el-dialog>
+
+
+    <el-dialog
+        v-dialogDrag
+        :close-on-click-modal="false"
+        title="选择图标"
+        :visible.sync="iconDialogShow"
+        width="50%">
+
+      <div class="menuContainer">
+        <template v-for="(icon,index) in iconList">
+          <i :key="index" v-if="icon.check" class="iconItem checkIcon" :class=icon.iconCode
+             @click="clickIcon(icon)"></i>
+          <i :key="index" v-if="!icon.check" class="iconItem" :class=icon.iconCode @click="clickIcon(icon)"></i>
+        </template>
+
+      </div>
+
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="iconDialogShow = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="confirmIcon()" size="small">确 定</el-button>
+      </span>
     </el-dialog>
 
   </div>
@@ -146,6 +185,7 @@ export default {
         id: null,
         name: '',
         url: '',
+        iconCode: '',
         isEnabled: 1,
         isAction: 1,
         isMenu: 1,
@@ -157,7 +197,10 @@ export default {
         url: {required: true, message: '请输入url', trigger: 'blur'}
       },
       treeOptions: [],
-      dialogTitle: '添加菜单'
+      dialogTitle: '添加菜单',
+      iconDialogShow: false,
+      iconList: [],
+      selectIcon: null
     }
   },
   created() {
@@ -216,6 +259,7 @@ export default {
       this.menuForm = {
         name: '',
         url: '',
+        iconCode: '',
         isEnabled: 1,
         isAction: 1,
         isMenu: 1,
@@ -228,25 +272,14 @@ export default {
       var params = this.menuForm;
       if (this.menuForm.id) {
         var save = false;
-        if (params.name != _this.copyMenu.name) {
-          save = true
-        }
-        if (params.parentId != _this.copyMenu.parentId) {
-          save = true
-        }
-        if (params.isMenu != _this.copyMenu.isMenu) {
-          save = true
-        }
-        if (params.isAction != _this.copyMenu.isAction) {
-          save = true
-        }
-        if (params.url != _this.copyMenu.url) {
-          save = true
-        }
-        if (params.orderId != _this.copyMenu.orderId) {
-          save = true
-        }
-        if (params.isEnabled != _this.copyMenu.isEnabled) {
+        if (params.name != _this.copyMenu.name
+            || params.parentId != _this.copyMenu.parentId
+            || params.isMenu != _this.copyMenu.isMenu
+            || params.isAction != _this.copyMenu.isAction
+            || params.url != _this.copyMenu.url
+            || params.iconCode != _this.copyMenu.iconCode
+            || params.orderId != _this.copyMenu.orderId
+            || params.isEnabled != _this.copyMenu.isEnabled) {
           save = true
         }
         if (!save) {
@@ -332,11 +365,80 @@ export default {
       this.getMenuList();
 
     },
+    chooseIcon() {
+      this.iconDialogShow = true;
+      this.getIcon();
+    },
+    getIcon() {
+      this.iconList = []
+      this.iconList.push({id: 1, iconCode: 'el-icon-platform-eleme', check: false})
+      this.iconList.push({id: 2, iconCode: 'el-icon-eleme', check: false})
+      this.iconList.push({id: 3, iconCode: 'el-icon-delete-solid', check: false})
+      let currIcon = this.iconList.filter(f => f.iconCode === this.menuForm.iconCode);
+      if (currIcon.length > 0) {
+        currIcon[0].check = true;
+      }
+
+    },
+    clickIcon(icon) {
+      this.iconList.forEach(f => {
+        f.check = false;
+      })
+      icon.check = true;
+      this.selectIcon = icon.iconCode;
+    },
+    confirmIcon() {
+      if (this.selectIcon) {
+        this.menuForm.iconCode = this.selectIcon
+      }
+      this.iconDialogShow = false;
+
+    }
   },
   components: {Treeselect},
 }
 </script>
 
 <style scoped>
+.menuIcon {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+
+}
+
+.menuIcon:hover {
+  color: #2d8cf0;
+}
+
+.menuContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  width: 100%;
+  height: 500px;
+  overflow: scroll;
+}
+
+.container .iconItem {
+  border: #dddddd solid 1px;
+  margin: 5px;
+  width: 50px;
+  height: 50px;
+  font-size: 45px;
+  text-align: center;
+  line-height: 50px;
+  cursor: pointer;
+}
+
+.iconItem:hover {
+  color: #2d8cf0;
+  background-color: #dddddd;
+}
+
+.checkIcon {
+  color: #2d8cf0;
+  background-color: #dddddd;
+}
 
 </style>

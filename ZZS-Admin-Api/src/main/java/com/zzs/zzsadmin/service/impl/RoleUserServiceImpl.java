@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class RoleUserService extends ServiceImpl<RoleUserMapper, Role_User> implements IRoleUserService {
+public class RoleUserServiceImpl extends ServiceImpl<RoleUserMapper, Role_User> implements IRoleUserService {
 
     @Autowired
     private RoleUserMapper roleUserMapper;

@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class UserMenuTreeDto {
-    public UserMenuTreeDto(){
+    public UserMenuTreeDto() {
         children = new ArrayList<>();
     }
 
@@ -19,6 +19,8 @@ public class UserMenuTreeDto {
     private String title;
 
     private String url;
+
+    private String iconCode;
 
     private List<UserMenuTreeDto> children;
 }

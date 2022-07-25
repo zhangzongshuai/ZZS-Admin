@@ -1,7 +1,6 @@
 package com.zzs.zzsadmin.vo.menu;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+
 import lombok.Data;
 
 /**
@@ -34,6 +33,9 @@ public class MenuVo {
      * url
      */
     private String url;
+
+
+    private String iconCode;
     /**
      * order_id
      */

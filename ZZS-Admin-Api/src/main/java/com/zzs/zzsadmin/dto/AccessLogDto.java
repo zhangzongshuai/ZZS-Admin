@@ -1,11 +1,6 @@
 package com.zzs.zzsadmin.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.zzs.zzsadmin.common.utils.DateTimeSerializer;
 import lombok.Data;
-
-
-import java.util.Date;
 
 @Data
 public class AccessLogDto {

@@ -16,7 +16,7 @@ public class Menu extends BaseModel {
     /**
      * id
      */
-    @TableId(value = "id",type = IdType.INPUT)
+    @TableId(value = "id", type = IdType.INPUT)
     private String id;
     /**
      * name
@@ -34,6 +34,8 @@ public class Menu extends BaseModel {
      * url
      */
     private String url;
+
+    private String iconCode;
     /**
      * order_id
      */

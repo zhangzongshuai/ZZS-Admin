@@ -31,6 +31,8 @@ public class MenuDto {
      * url
      */
     private String url;
+
+    private String iconCode;
     /**
      * order_id
      */

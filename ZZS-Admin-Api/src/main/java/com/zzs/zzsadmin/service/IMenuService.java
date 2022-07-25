@@ -19,6 +19,8 @@ public interface IMenuService  extends IService<Menu> {
 
     void deleteMenu(String id);
 
+    void modifyMenu(MenuVo menuVo,String loginName);
+
     MenuVo getMenuById(String id);
 
     List<MenuTreeDto> GetMenuTree();
