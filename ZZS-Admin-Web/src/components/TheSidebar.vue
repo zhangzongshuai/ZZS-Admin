@@ -92,7 +92,6 @@ export default {
     },
     // 选中菜单的方法
     selectFn(index, indexPath) {
-      debugger
       console.log(indexPath)
       if (!indexPath) {
         return;

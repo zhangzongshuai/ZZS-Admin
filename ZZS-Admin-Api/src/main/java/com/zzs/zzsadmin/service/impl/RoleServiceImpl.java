@@ -14,7 +14,9 @@ import com.zzs.zzsadmin.entity.Role_User;
 import com.zzs.zzsadmin.mapper.RoleMapper;
 import com.zzs.zzsadmin.service.IRoleService;
 import com.zzs.zzsadmin.service.IRoleUserService;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
+    @Autowired
     private IRoleUserService roleUserService;
 
     /**

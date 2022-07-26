@@ -371,13 +371,21 @@ export default {
     },
     getIcon() {
       this.iconList = []
-      this.iconList.push({id: 1, iconCode: 'el-icon-platform-eleme', check: false})
-      this.iconList.push({id: 2, iconCode: 'el-icon-eleme', check: false})
-      this.iconList.push({id: 3, iconCode: 'el-icon-delete-solid', check: false})
-      let currIcon = this.iconList.filter(f => f.iconCode === this.menuForm.iconCode);
-      if (currIcon.length > 0) {
-        currIcon[0].check = true;
-      }
+      // this.iconList.push({id: 1, iconCode: 'el-icon-platform-eleme', check: false})
+      // this.iconList.push({id: 2, iconCode: 'el-icon-eleme', check: false})
+      // this.iconList.push({id: 3, iconCode: 'el-icon-delete-solid', check: false})
+      this.$axios.get(this.$api.getIconList).then(res => {
+        if (res.errcode === 0) {
+          res.datas.forEach(f => {
+            f.check = false;
+            this.iconList.push(f);
+          })
+          let currIcon = this.iconList.filter(f => f.iconCode === this.menuForm.iconCode);
+          if (currIcon.length > 0) {
+            currIcon[0].check = true;
+          }
+        }
+      })
 
     },
     clickIcon(icon) {
