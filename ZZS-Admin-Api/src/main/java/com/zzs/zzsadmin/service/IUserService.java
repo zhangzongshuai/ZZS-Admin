@@ -47,7 +47,7 @@ public interface IUserService extends IService<User> {
      * @param user
      * @return
      */
-    void addUser(UserDto user,String loginName);
+    void addUser(UserDto user);
 
     /**
      * 根据用户id获取用户信息

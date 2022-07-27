@@ -20,14 +20,15 @@ public class MenuVo {
      * name
      */
     private String name;
+
+    private String type;
+
+    private String permissionCode;
     /**
      * parent_id
      */
     private String parentId;
-    /**
-     * is_menu
-     */
-    private Integer isMenu;
+
 
     /**
      * url

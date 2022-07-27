@@ -9,27 +9,28 @@
              @select="selectFn"
     >
       <template v-for="item in routeMap">
-        <template v-if="item.children">
+        <template v-if="item.children && item.children.length > 0">
           <el-submenu :index="item.url" :key="item.url">
             <template slot="title">
-              <i :class="item.iconCode"></i><span  slot="title">{{ item.title }}</span>
+              <i :class="item.iconCode"></i><span slot="title">{{ item.name }}</span>
             </template>
             <template v-for="subItem in item.children">
-              <el-submenu v-if="subItem.children" :index="subItem.url" :key="subItem.url">
-                <template slot="title">{{ subItem.title }}</template>
+              <el-submenu v-if="subItem.children && subItem.children.length > 0" :index="subItem.url"
+                          :key="subItem.url">
+                <template slot="title">{{ subItem.name }}</template>
                 <el-menu-item v-for="(threeItem,i) in subItem.children" :key="i" :index="threeItem.name">
-                  {{ threeItem.title }}
+                  {{ threeItem.name }}
                 </el-menu-item>
               </el-submenu>
               <el-menu-item v-else :index="subItem.url" :key="subItem.url">
-                <i :class="subItem.iconCode"></i> <span  slot="title">{{ subItem.title }}</span>
+                <i :class="subItem.iconCode"></i> <span slot="title">{{ subItem.name }}</span>
               </el-menu-item>
             </template>
           </el-submenu>
         </template>
         <template v-else>
           <el-menu-item :index="item.url" :key="item.url">
-            <i :class="item.iconCode"></i><span slot="title">{{ item.title }}</span>
+            <i :class="item.iconCode"></i><span slot="title">{{ item.name }}</span>
           </el-menu-item>
         </template>
       </template>
@@ -56,6 +57,7 @@ export default {
     //let pageList = this.getAllRoutes(this.$router.options.routes);
     userInfo = JSON.parse(localStorage.getItem('userInfo'));
     this.getMenu();
+    this.getUserBtn();
     // let routeMap = {};
     // for (let item of pageList) {
     //   if (item.name) {
@@ -129,6 +131,18 @@ export default {
           }
         } else {
           _this.$message.error(res.errmsg);
+        }
+      });
+    },
+
+    getUserBtn() {
+      let params = {id: userInfo.user_id}
+      this.$axios.get(this.$api.getUserBtn, {params}).then(res => {
+        if (res.errcode === 0) {
+          let permissionBtns = res.datas.join(',');
+          window.sessionStorage.setItem('permissionBtns', permissionBtns);
+        } else {
+          this.$message.error(res.errmsg);
         }
       });
     }

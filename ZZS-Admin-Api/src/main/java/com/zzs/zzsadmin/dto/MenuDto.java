@@ -22,10 +22,10 @@ public class MenuDto {
      * parent_id
      */
     private String parentId;
-    /**
-     * is_menu
-     */
-    private Integer isMenu;
+
+    private String type;
+
+    private String permissionCode;
 
     /**
      * url

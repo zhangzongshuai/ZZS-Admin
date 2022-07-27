@@ -1,8 +1,6 @@
 package com.zzs.zzsadmin.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zzs.zzsadmin.common.utils.AssertUtil;
 import com.zzs.zzsadmin.common.vo.BaseResultData;
@@ -11,10 +9,10 @@ import com.zzs.zzsadmin.common.vo.ResultData;
 import com.zzs.zzsadmin.common.vo.ResultDataList;
 import com.zzs.zzsadmin.dto.MenuDto;
 import com.zzs.zzsadmin.dto.MenuTreeDto;
-import com.zzs.zzsadmin.dto.UserMenuTreeDto;
 import com.zzs.zzsadmin.entity.Menu;
 import com.zzs.zzsadmin.service.IMenuService;
 import com.zzs.zzsadmin.vo.menu.MenuVo;
+import com.zzs.zzsadmin.vo.menu.MenuTreeVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +32,10 @@ public class MenuController {
     @ApiOperation("分页获取菜单列表")
     @GetMapping("pageList")
     public PageResult<MenuVo> getMenusPage(Long pageNum, Long pageSize, String name) {
-        AssertUtil.valid(pageNum, "pageNum", "参数错误");
-        AssertUtil.valid(pageSize, "pageSize", "参数错误");
+        if (pageNum == null || pageNum == null) {
+            pageNum = 1L;
+            pageSize = -1L;
+        }
         IPage<Menu> pageList = menuService.getMenusPage(pageNum, pageSize, name);
         PageResult<MenuVo> res = new PageResult<>(pageList);
         List<MenuVo> list = new ArrayList<>();
@@ -75,8 +75,8 @@ public class MenuController {
         return res;
     }
 
-    @ApiOperation("根据菜单树")
-    @GetMapping("/menuTree")
+    @ApiOperation("获取菜单树形列表")
+    @GetMapping("/menuTree1")
     public ResultDataList<MenuTreeDto> GetMenuTree() {
         ResultDataList<MenuTreeDto> res = new ResultDataList<>();
         List<MenuTreeDto> menuTreeDtos = menuService.GetMenuTree();
@@ -84,6 +84,17 @@ public class MenuController {
         return res;
     }
 
+    @ApiOperation("获取菜单树形列表")
+    @GetMapping("/menuTree")
+    public ResultDataList<MenuTreeVo> getMenuTree() {
+        ResultDataList<MenuTreeVo> res = new ResultDataList<>();
+        List<MenuTreeVo> menuTreeDtos = menuService.getMenuTree();
+        res.setDatas(menuTreeDtos);
+        return res;
+    }
+
+
+    @ApiOperation("修改菜单")
     @PutMapping("/modify")
     public BaseResultData modifyMenu(@RequestBody MenuVo menuVo, @RequestParam String loginName) {
         BaseResultData res = new BaseResultData();
@@ -91,11 +102,21 @@ public class MenuController {
         return res;
     }
 
+    @ApiOperation("获取用户菜单权限")
     @GetMapping("/userMenu")
-    public ResultDataList<UserMenuTreeDto> GetUserMenuTree(String id) {
-        ResultDataList<UserMenuTreeDto> res = new ResultDataList<>();
-        List<UserMenuTreeDto> menuTreeDtos = menuService.GetUserMenuTree(id);
+    public ResultDataList<MenuTreeVo> getUserMenuTree(String id) {
+        ResultDataList<MenuTreeVo> res = new ResultDataList<>();
+        List<MenuTreeVo> menuTreeDtos = menuService.GetUserMenuTree(id);
         res.setDatas(menuTreeDtos);
+        return res;
+    }
+
+    @ApiOperation("获取用户按钮权限")
+    @GetMapping("/userBtn")
+    public ResultDataList<String> getUserBtn(String id) {
+        ResultDataList<String> res = new ResultDataList<>();
+        List<String> userBtn = menuService.getUserBtn(id);
+        res.setDatas(userBtn);
         return res;
     }
 

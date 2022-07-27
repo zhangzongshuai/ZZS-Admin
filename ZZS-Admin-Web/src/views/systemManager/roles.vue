@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <el-form :inline="true" :model="searchParams" size="small">
         <el-form-item>
-          <el-button type="primary" icon="el-icon-plus" @click="addUser">新增角色</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="addUser" v-permissions="'role:add'">新增角色</el-button>
         </el-form-item>
         <el-form-item label="名称">
           <el-input v-model="searchParams.name" placeholder="请输入角色名称"></el-input>
@@ -47,10 +47,10 @@
             fixed="right"
             label="操作">
           <template slot-scope="scope">
-            <el-button @click="modifyRole(scope.row.id)" type="text" size="small">编辑</el-button>
-            <el-button @click="deleteRole(scope.row.id)" type="text" size="small">删除</el-button>
-            <el-button @click="assignMenu(scope.row.id,scope.row.name)" type="text" size="small">分配权限</el-button>
-            <el-button @click="assignUser(scope.row.id,scope.row.name)" type="text" size="small">分配用户</el-button>
+            <el-button @click="modifyRole(scope.row.id)" type="text" size="small" v-permissions="'role:edit'">编辑</el-button>
+            <el-button @click="deleteRole(scope.row.id)" type="text" size="small" v-permissions="'role:delete'">删除</el-button>
+            <el-button @click="assignMenu(scope.row.id,scope.row.name)" type="text" size="small" v-permissions="'role:setRoles'">分配权限</el-button>
+            <el-button @click="assignUser(scope.row.id,scope.row.name)" type="text" size="small" v-permissions="'role:setUsers'">分配用户</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -100,7 +100,7 @@
         v-if="assignMenuDailog"
         title="分配权限"
         :visible.sync="assignMenuDailog"
-        width="30%">
+        width="40%">
       <el-row :gutter="20">
         <el-col :span="6">
           <div>角色名称:</div>
@@ -114,12 +114,14 @@
           <div>分配权限:</div>
         </el-col>
         <el-col :span="18">
-          <div class="p10 h200 oa" style="border: #adb3bc 1px solid">
+          <div class="p10 h300 oa" style="border: #adb3bc 1px solid">
             <el-tree
                 ref="menuTree"
+                default-expand-all
+                :check-strictly="true"
                 :data="menuTreeData"
+                :props="defaultProps"
                 node-key="id"
-
                 show-checkbox>
             </el-tree>
           </div>
@@ -247,6 +249,11 @@ export default {
         name: "",
       },
       menuTreeData: [],
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      },
+      defaultCheckedMenus:[],
       checkedKeys: [],
 
       assignUserDailog: false,
@@ -319,14 +326,10 @@ export default {
         if (valid) {
           if (_this.roleForm.id) {
             var save = false;
-            if (params.name != _this.copyRole.name) {
-              save = true
-            }
-            if (params.description != _this.copyRole.description) {
-              save = true
-            }
-            if (params.isEnabled != _this.copyRole.isEnabled) {
-              save = true
+            if (params.name != _this.copyRole.name
+                || params.description != _this.copyRole.description
+                || params.isEnabled != _this.copyRole.isEnabled) {
+              save = true;
             }
             if (!save) {
               _this.dialogShow = false;
@@ -401,7 +404,6 @@ export default {
       let _this = this;
       _this.$axios.get(_this.$api.getMenuTree).then(function (res) {
         if (res.errcode === 0) {
-          // _this.menuTreeData = res.datas;
           _this.getCheckesMenus(id, res.datas);
         } else {
           _this.$message.error(res.errmsg);

@@ -10,7 +10,7 @@ Vue.directive('dialogDrag', {
         dragDom.style.cssText += ';top:0px;'
 
         // 获取原有属性 ie dom元素.currentStyle 火狐谷歌 window.getComputedStyle(dom元素, null);
-        const getStyle = (function() {
+        const getStyle = (function () {
             if (window.document.currentStyle) {
                 return (dom, attr) => dom.currentStyle[attr]
             } else {
@@ -47,7 +47,7 @@ Vue.directive('dialogDrag', {
                 styT = +styT.replace(/px/g, '')
             }
 
-            document.onmousemove = function(e) {
+            document.onmousemove = function (e) {
                 // 通过事件委托，计算移动的距离
                 let left = e.clientX - disX
                 let top = e.clientY - disY
@@ -73,10 +73,30 @@ Vue.directive('dialogDrag', {
             }
 
             // eslint-disable-next-line no-unused-vars
-            document.onmouseup = function(e) {
+            document.onmouseup = function (e) {
                 document.onmousemove = null
                 document.onmouseup = null
             }
         }
     }
 })
+
+
+/**
+ * 权限指令
+ */
+Vue.directive('permissions', {
+    // eslint-disable-next-line no-unused-vars
+    inserted: function (el, bind, vnode) {
+        let rule = window.sessionStorage.getItem("permissionBtns");
+        let permissions = rule ? rule.split(',') : [];
+        let state = false;
+        for (let i in permissions) {
+            if (bind.value == permissions[i]) {
+                state = true;
+                break;
+            }
+        }
+        !state ? el.remove() : '';
+    }
+});

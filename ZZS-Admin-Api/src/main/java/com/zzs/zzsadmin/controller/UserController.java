@@ -86,8 +86,8 @@ public class UserController {
      */
     @ApiOperation(value = "添加用户")
     @PostMapping("/addUser")
-    public BaseResultData addUser(@RequestBody UserDto userDto, @RequestParam String loginName) {
-        userService.addUser(userDto, loginName);
+    public BaseResultData addUser(@RequestBody UserDto userDto) {
+        userService.addUser(userDto);
         return new BaseResultData();
 
     }

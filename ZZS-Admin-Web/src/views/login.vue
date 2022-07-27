@@ -90,6 +90,8 @@ export default {
                   window.localStorage.removeItem('login')
                 }
                 window.localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                let userPermissions = ['sys:modifyMenu']
+                window.sessionStorage.setItem('userPermissions', JSON.stringify(userPermissions));
                 // 延迟一秒跳转，直接跳转有可能localstorage存储异常
                 setTimeout(function () {
                   _this.$router.push('/index');

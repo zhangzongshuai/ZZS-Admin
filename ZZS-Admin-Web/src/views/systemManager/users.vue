@@ -4,7 +4,7 @@
     <el-card class="box-card">
       <el-form :inline="true" :model="searchParams" size="small">
         <el-form-item>
-          <el-button type="primary" icon="el-icon-plus" @click="addUser">新增用户</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="addUser" v-permissions="'user:add'">新增用户</el-button>
         </el-form-item>
         <el-form-item label="姓名">
           <el-input v-model="searchParams.name" placeholder="姓名"></el-input>
@@ -70,10 +70,10 @@
               fixed="right"
               label="操作">
             <template slot-scope="scope">
-              <el-button @click="modifyUser(scope.row.id)" type="text" size="small">编辑</el-button>
-              <el-button @click="deleteUser(scope.row.id)" type="text" size="small">删除</el-button>
-              <el-button @click="resetPwd(scope.row.id)" type="text" size="small">重置密码</el-button>
-              <el-button @click="assignRole({id:scope.row.id,name:scope.row.name})" type="text" size="small">分配角色
+              <el-button @click="modifyUser(scope.row.id)" type="text" size="small" v-permissions="'user:edit'">编辑</el-button>
+              <el-button @click="deleteUser(scope.row.id)" type="text" size="small" v-permissions="'user:delete'">删除</el-button>
+              <el-button @click="resetPwd(scope.row.id)" type="text" size="small" v-permissions="'user:resetPwd'">重置密码</el-button>
+              <el-button @click="assignRole({id:scope.row.id,name:scope.row.name})" type="text" size="small" v-permissions="'user:setRoles'">分配角色
               </el-button>
             </template>
           </el-table-column>
@@ -288,30 +288,18 @@ export default {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           if (_this.userForm.id) {
-
             var isModify = false;
-            if (params.name != _this.userCopy.name) {
+            if (params.name != _this.userCopy.name
+                || params.email != _this.userCopy.email
+                || params.phoneNum != _this.userCopy.phoneNum
+                || params.sex != _this.userCopy.sex
+                || params.isEnabled != _this.userCopy.isEnabled) {
               isModify = true;
             }
-            if (params.email != _this.userCopy.email) {
-              isModify = true;
-            }
-            if (params.phoneNum != _this.userCopy.phoneNum) {
-              isModify = true;
-            }
-            if (params.sex != _this.userCopy.sex) {
-              isModify = true;
-            }
-            if (params.isEnabled != _this.userCopy.isEnabled) {
-              isModify = true;
-            }
-            console.log(params)
-            console.log(_this.userCopy)
             if (!isModify) {
               _this.dialogShow = false;
               return;
             }
-
             params.modifier = userInfo.login_name;
             _this.$axios.put(_this.$api.modifyUser, params).then(function (res) {
               if (res.errcode === 0) {

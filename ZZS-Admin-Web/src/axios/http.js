@@ -16,7 +16,6 @@ axios.interceptors.request.use(config => {
                 t: new Date().getTime(),
             };
         }
-
     }
     return config;
 }, error => {

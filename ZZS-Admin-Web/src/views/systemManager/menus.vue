@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <el-form :inline="true" :model="searchParams" size="small">
         <el-form-item>
-          <el-button type="primary" icon="el-icon-plus" @click="addMenu">新增菜单</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="addMenu" v-permissions="'menu:add'">新增菜单</el-button>
         </el-form-item>
         <el-form-item label="菜单名称">
           <el-input v-model="searchParams.name" placeholder="请输入菜单名称"></el-input>
@@ -15,6 +15,8 @@
       <el-table
           :data="tableData"
           border
+          row-key="id"
+          default-expand-all
           :cell-style="{padding:'5px 0'}"
           :height="tableHeight"
           style="width: 100%">
@@ -30,9 +32,13 @@
             min-width="180">
         </el-table-column>
         <el-table-column
-            prop="url"
-            label="URL地址"
-            min-width="180">
+            prop="type"
+            label="菜单类型"
+            min-width="100">
+          <template slot-scope="scope">
+            <span v-if="scope.row.type == 'menu'">菜单</span>
+            <span v-if="scope.row.type == 'btn'">按钮</span>
+          </template>
         </el-table-column>
         <el-table-column
             prop="iconCode"
@@ -44,6 +50,12 @@
             <i :class="scope.row.iconCode"></i>
           </template>
         </el-table-column>
+        <el-table-column
+            prop="url"
+            label="菜单路径"
+            min-width="180">
+        </el-table-column>
+
         <el-table-column
             prop="orderId"
             label="排序号"
@@ -63,22 +75,23 @@
         <el-table-column
             label="操作">
           <template slot-scope="scope">
-            <el-button @click="modifyMenu(scope.row.id)" type="text" size="small">编辑</el-button>
-            <el-button @click="deleteMenu(scope.row.id)" type="text" size="small">删除</el-button>
+            <el-button @click="modifyMenu(scope.row.id)" type="text" size="small" v-permissions="'menu:edit'">编辑
+            </el-button>
+            <el-button @click="deleteMenu(scope.row.id)" type="text" size="small" v-permissions="'menu:delete'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-          class="mt10"
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pageOptions.pageNum"
-          :page-sizes="[20, 50, 100,200]"
-          :page-size="pageOptions.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pageOptions.total">
-      </el-pagination>
+      <!--      <el-pagination-->
+      <!--          class="mt10"-->
+      <!--          background-->
+      <!--          @size-change="handleSizeChange"-->
+      <!--          @current-change="handleCurrentChange"-->
+      <!--          :current-page="pageOptions.pageNum"-->
+      <!--          :page-sizes="[20, 50, 100,200]"-->
+      <!--          :page-size="pageOptions.pageSize"-->
+      <!--          layout="total, sizes, prev, pager, next, jumper"-->
+      <!--          :total="pageOptions.total">-->
+      <!--      </el-pagination>-->
     </el-card>
 
     <el-dialog
@@ -88,15 +101,20 @@
         :visible.sync="dialogShow"
         width="30%">
 
-      <el-form ref="userForm" :model="menuForm" :rules="menuRules" label-width="80px" size="small">
-
-        <el-form-item label="菜单名称" prop="name">
+      <el-form ref="userForm" :model="menuForm" :rules="menuRules" label-width="100px" size="small">
+        <el-form-item label="菜单类型" prop="type">
+          <el-radio-group v-model="menuForm.type" @change="menuTypeChange">
+            <el-radio label="menu">菜单</el-radio>
+            <el-radio label="btn">按钮</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item prop="name">
+          <span slot="label">
+            {{ menuForm.type == 'menu' ? '菜单名称' : '按钮名称' }}
+          </span>
           <el-input v-model="menuForm.name" placeholder="请输入菜单名称"></el-input>
         </el-form-item>
-        <el-form-item label="是否菜单">
-          <el-switch v-model="menuForm.isMenu" :active-value="1" :inactive-value="0"></el-switch>
-        </el-form-item>
-        <el-form-item label="父级菜单" prop="parentId" v-if="menuForm.isMenu">
+        <el-form-item label="上级菜单" prop="parentId">
           <treeselect
               v-model="menuForm.parentId"
               :multiple="false"
@@ -104,10 +122,13 @@
               @select="selectTree"
               placeholder="请选择父级菜单"/>
         </el-form-item>
-        <el-form-item label="URL" prop="url">
+        <el-form-item label="授权标识" prop="permissionCode" v-if="menuForm.type == 'btn'">
+          <el-input v-model="menuForm.permissionCode" placeholder="请输入授权标识，例如user:add"></el-input>
+        </el-form-item>
+        <el-form-item label="菜单路径" prop="url" v-if="menuForm.type == 'menu'">
           <el-input v-model="menuForm.url" placeholder="请输入url"></el-input>
         </el-form-item>
-        <el-form-item label="图标" prop="iconCode">
+        <el-form-item label="图标" prop="iconCode" v-if="menuForm.type == 'menu'">
           <el-input placeholder="请点击选择图标" v-model="menuForm.iconCode">
             <el-button slot="append" type="primary" icon="el-icon-s-tools" @click="chooseIcon"></el-button>
           </el-input>
@@ -115,7 +136,7 @@
         <el-form-item label="是否启用">
           <el-switch v-model="menuForm.isEnabled" :active-value="1" :inactive-value="0"></el-switch>
         </el-form-item>
-        <el-form-item label="排序号" prop="orderId">
+        <el-form-item label="排序号" prop="orderId" v-if="menuForm.type == 'menu'">
           <el-input v-model="menuForm.orderId"></el-input>
         </el-form-item>
       </el-form>
@@ -159,10 +180,7 @@
 <script>
 import {showHeight} from "@/common/tableHeight";
 import {buildMenuTree} from "@/common/menuTree"
-
-// import the component
 import Treeselect from '@riophae/vue-treeselect'
-// import the styles
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 let userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -183,12 +201,13 @@ export default {
       dialogShow: false,
       menuForm: {
         id: null,
+        type: 'menu',
         name: '',
+        parentId: null,
+        permissionCode: '',
         url: '',
         iconCode: '',
         isEnabled: 1,
-        isAction: 1,
-        isMenu: 1,
         orderId: null
       },
       copyMenu: {},
@@ -204,13 +223,27 @@ export default {
     }
   },
   created() {
-    this.tableHeight = showHeight(280)
+    this.tableHeight = showHeight(240)
     window.onresize = () => {
-      this.tableHeight = showHeight(280)
+      this.tableHeight = showHeight(240)
     }
     this.getMenuList();
   },
   methods: {
+
+    menuTypeChange(val) {
+      this.menuForm = {
+        id: null,
+        type: val,
+        name: '',
+        parentId: null,
+        url: '',
+        permissionCode: '',
+        iconCode: '',
+        isEnabled: 1,
+        orderId: null
+      }
+    },
 
     getMenuList() {
       let _this = this;
@@ -221,7 +254,7 @@ export default {
       if (_this.searchParams.name) {
         params.name = _this.searchParams.name;
       }
-      _this.$axios.get(_this.$api.getMenus, {params}).then(function (res) {
+      _this.$axios.get(_this.$api.getMenuTree, {params}).then(function (res) {
         if (res.errcode === 0) {
           _this.tableData = res.datas;
           _this.pageOptions.total = res.totalCount;
@@ -233,11 +266,7 @@ export default {
     getMenuTreeData(id) {
 
       let _this = this;
-      var params = {
-        pageNum: 1,
-        pageSize: 5000,
-      }
-      _this.$axios.get(_this.$api.getMenus, {params}).then(function (res) {
+      _this.$axios.get(_this.$api.getMenus).then(function (res) {
         if (res.errcode === 0) {
           _this.treeOptions = buildMenuTree(res.datas, id);
         } else {
@@ -257,12 +286,13 @@ export default {
     addMenu() {
       this.dialogShow = true;
       this.menuForm = {
+        type: 'menu',
         name: '',
+        parentId: null,
         url: '',
+        permissionCode: '',
         iconCode: '',
         isEnabled: 1,
-        isAction: 1,
-        isMenu: 1,
         orderId: null
       },
           this.getMenuTreeData();
@@ -271,21 +301,6 @@ export default {
       let _this = this;
       var params = this.menuForm;
       if (this.menuForm.id) {
-        var save = false;
-        if (params.name != _this.copyMenu.name
-            || params.parentId != _this.copyMenu.parentId
-            || params.isMenu != _this.copyMenu.isMenu
-            || params.isAction != _this.copyMenu.isAction
-            || params.url != _this.copyMenu.url
-            || params.iconCode != _this.copyMenu.iconCode
-            || params.orderId != _this.copyMenu.orderId
-            || params.isEnabled != _this.copyMenu.isEnabled) {
-          save = true
-        }
-        if (!save) {
-          _this.dialogShow = false;
-          return;
-        }
         _this.$axios.put(_this.$api.modifyMenu + "?loginName=" + userInfo.login_name, params).then(function (res) {
           if (res.errcode === 0) {
             _this.$message.success("修改成功!")
@@ -371,9 +386,6 @@ export default {
     },
     getIcon() {
       this.iconList = []
-      // this.iconList.push({id: 1, iconCode: 'el-icon-platform-eleme', check: false})
-      // this.iconList.push({id: 2, iconCode: 'el-icon-eleme', check: false})
-      // this.iconList.push({id: 3, iconCode: 'el-icon-delete-solid', check: false})
       this.$axios.get(this.$api.getIconList).then(res => {
         if (res.errcode === 0) {
           res.datas.forEach(f => {
@@ -408,17 +420,6 @@ export default {
 </script>
 
 <style scoped>
-.menuIcon {
-  width: 50px;
-  height: 50px;
-  font-size: 20px;
-
-}
-
-.menuIcon:hover {
-  color: #2d8cf0;
-}
-
 .menuContainer {
   display: flex;
   flex-wrap: wrap;

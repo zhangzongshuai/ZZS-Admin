@@ -44,6 +44,8 @@ export const systemApi = {
 
     getUserMenu: menuApi + 'userMenu',
 
+    getUserBtn: menuApi + 'userBtn',
+
     // 图标管理
     getIconList: iconApi + 'iconList',
 

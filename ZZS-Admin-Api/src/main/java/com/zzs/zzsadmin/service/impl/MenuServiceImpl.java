@@ -2,17 +2,13 @@ package com.zzs.zzsadmin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zzs.zzsadmin.common.exception.MessageException;
-import com.zzs.zzsadmin.common.utils.CopyUtil;
 import com.zzs.zzsadmin.dto.MenuDto;
 import com.zzs.zzsadmin.dto.MenuTreeDto;
-import com.zzs.zzsadmin.dto.UserMenuTreeDto;
 import com.zzs.zzsadmin.entity.Menu;
 import com.zzs.zzsadmin.entity.Role;
 import com.zzs.zzsadmin.entity.Role_Menu;
@@ -23,6 +19,7 @@ import com.zzs.zzsadmin.mapper.RoleMenuMapper;
 import com.zzs.zzsadmin.mapper.RoleUserMapper;
 import com.zzs.zzsadmin.service.IMenuService;
 import com.zzs.zzsadmin.vo.menu.MenuVo;
+import com.zzs.zzsadmin.vo.menu.MenuTreeVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -114,8 +111,35 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         }
     }
 
+
+    /**
+     * 获取菜单树
+     *
+     * @return
+     */
     @Override
-    public List<UserMenuTreeDto> GetUserMenuTree(String userId) {
+    public List<MenuTreeVo> getMenuTree() {
+        QueryWrapper<Menu> wrapper = new QueryWrapper<>();
+        wrapper.eq("is_enabled", 1)
+                .orderByAsc("order_id");
+        List<Menu> menuList = menuMapper.selectList(wrapper);
+        List<MenuTreeVo> treeList = new ArrayList<>();
+        for (Menu m : menuList) {
+            MenuTreeVo treeVo = new MenuTreeVo();
+            BeanUtil.copyProperties(m, treeVo);
+            treeList.add(treeVo);
+        }
+        if (menuList.size() > 0) {
+            List<MenuTreeVo> menuTreeDtos = buildMenuTree(treeList, "0");
+            return menuTreeDtos;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+
+    @Override
+    public List<MenuTreeVo> GetUserMenuTree(String userId) {
         List<Role_User> roleUsers = roleUserMapper.selectList(new QueryWrapper<Role_User>().eq("user_id", userId));
         if (roleUsers.isEmpty()) {
             return new ArrayList<>();
@@ -127,24 +151,59 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             return new ArrayList<>();
         }
         List<String> enabledRoleIds = roles.stream().map(m -> m.getId()).collect(Collectors.toList());
-
         List<Role_Menu> roleMenus = roleMenuMapper.selectList(new QueryWrapper<Role_Menu>().in("role_id", enabledRoleIds));
         if (roleMenus.isEmpty()) {
             return new ArrayList<>();
         }
         List<String> menuIds = roleMenus.stream().map(m -> m.getMenuId()).collect(Collectors.toList());
         QueryWrapper<Menu> wrapper = new QueryWrapper<>();
-        wrapper.eq("is_menu", 1).eq("is_enabled", 1).in("id", menuIds);
-        wrapper.orderByAsc("order_id");
+        wrapper.eq("type", "menu")
+                .eq("is_enabled", 1)
+                .in("id", menuIds)
+                .orderByAsc("order_id");
         List<Menu> menuList = menuMapper.selectList(wrapper);
+        List<MenuTreeVo> treeList = new ArrayList<>();
+        for (Menu m : menuList) {
+            MenuTreeVo treeVo = new MenuTreeVo();
+            BeanUtil.copyProperties(m, treeVo);
+            treeList.add(treeVo);
+        }
         if (!menuList.isEmpty()) {
-            List<UserMenuTreeDto> menuTreeDtos = BuildUserMenuTree(menuList, "0");
+            List<MenuTreeVo> menuTreeDtos = buildMenuTree(treeList, "0");
             return menuTreeDtos;
         } else {
             return new ArrayList<>();
         }
 
     }
+
+    @Override
+    public List<String> getUserBtn(String userId) {
+        List<Role_User> roleUsers = roleUserMapper.selectList(new QueryWrapper<Role_User>().eq("user_id", userId));
+        if (roleUsers.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<String> roleIds = roleUsers.stream().map(m -> m.getRoleId()).collect(Collectors.toList());
+
+        List<Role> roles = roleMapper.selectList(new QueryWrapper<Role>().in("id", roleIds).eq("is_enabled", 1));
+        if (roles.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<String> enabledRoleIds = roles.stream().map(m -> m.getId()).collect(Collectors.toList());
+        List<Role_Menu> roleMenus = roleMenuMapper.selectList(new QueryWrapper<Role_Menu>().in("role_id", enabledRoleIds));
+        if (roleMenus.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<String> menuIds = roleMenus.stream().map(m -> m.getMenuId()).collect(Collectors.toList());
+        QueryWrapper<Menu> wrapper = new QueryWrapper<>();
+        wrapper.eq("type", "btn")
+                .eq("is_enabled", 1)
+                .in("id", menuIds);
+        List<Menu> menuList = menuMapper.selectList(wrapper);
+        List<String> userBtns = menuList.stream().map(m -> m.getPermissionCode()).collect(Collectors.toList());
+        return userBtns;
+    }
+
 
     private List<MenuTreeDto> BuildTree(List<Menu> list, String pid) {
         List<MenuTreeDto> childrenList = new ArrayList<>();
@@ -173,9 +232,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         return childrenList;
     }
 
-    private List<UserMenuTreeDto> BuildUserMenuTree(List<Menu> list, String pid) {
-        List<UserMenuTreeDto> childrenList = new ArrayList<>();
-        List<Menu> parentList;
+    /**
+     * 生成菜单树
+     *
+     * @param list
+     * @param pid
+     * @return
+     */
+    private List<MenuTreeVo> buildMenuTree(List<MenuTreeVo> list, String pid) {
+        List<MenuTreeVo> childrenList = new ArrayList<>();
+        List<MenuTreeVo> parentList;
         if (pid == "0") {
             parentList = list.stream()
                     .filter(s -> Objects.equals(s.getParentId(), "0") || Objects.equals(s.getParentId(), "") || Objects.equals(s.getParentId(), null))
@@ -184,21 +250,44 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             parentList = list.stream().filter(s -> Objects.equals(s.getParentId(), pid)).collect(Collectors.toList());
         }
 
-
-        if (!parentList.isEmpty()) {
-            for (Menu o : parentList) {
-                List<UserMenuTreeDto> child = BuildUserMenuTree(list, o.getId());
-                UserMenuTreeDto dto = new UserMenuTreeDto();
-                dto.setId(o.getId());
-                dto.setTitle(o.getName());
-                dto.setUrl(o.getUrl() + "?title=" + o.getName());
-                dto.setIconCode(o.getIconCode());
-                dto.setChildren(child.isEmpty() ? null : child);
-                childrenList.add(dto);
-
+        if (parentList.size() > 0) {
+            for (MenuTreeVo vo : parentList) {
+                List<MenuTreeVo> child = buildMenuTree(list, vo.getId());
+                vo.setChildren(child);
+                childrenList.add(vo);
             }
         }
 
         return childrenList;
     }
+
+
+//    private List<MenuTreeVo> BuildUserMenuTree(List<Menu> list, String pid) {
+//        List<MenuTreeVo> childrenList = new ArrayList<>();
+//        List<Menu> parentList;
+//        if (pid == "0") {
+//            parentList = list.stream()
+//                    .filter(s -> Objects.equals(s.getParentId(), "0") || Objects.equals(s.getParentId(), "") || Objects.equals(s.getParentId(), null))
+//                    .collect(Collectors.toList());
+//        } else {
+//            parentList = list.stream().filter(s -> Objects.equals(s.getParentId(), pid)).collect(Collectors.toList());
+//        }
+//
+//
+//        if (!parentList.isEmpty()) {
+//            for (Menu o : parentList) {
+//                List<MenuTreeVo> child = BuildUserMenuTree(list, o.getId());
+//                MenuTreeVo menuTreeVo = new MenuTreeVo();
+//                menuTreeVo.setId(o.getId());
+//                menuTreeVo.setTitle(o.getName());
+//                menuTreeVo.setUrl(o.getUrl() + "?title=" + o.getName());
+//                menuTreeVo.setIconCode(o.getIconCode());
+//                menuTreeVo.setChildren(child.isEmpty() ? null : child);
+//                childrenList.add(menuTreeVo);
+//
+//            }
+//        }
+//
+//        return childrenList;
+//    }
 }

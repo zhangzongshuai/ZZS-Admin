@@ -26,14 +26,15 @@ public class Menu extends BaseModel {
      * parent_id
      */
     private String parentId;
-    /**
-     * is_menu
-     */
-    private Integer isMenu;
+
     /**
      * url
      */
     private String url;
+
+    private String type;
+
+    private String permissionCode;
 
     private String iconCode;
     /**

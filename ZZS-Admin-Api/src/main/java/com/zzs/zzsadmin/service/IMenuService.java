@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zzs.zzsadmin.dto.MenuDto;
 import com.zzs.zzsadmin.dto.MenuTreeDto;
-import com.zzs.zzsadmin.dto.UserMenuTreeDto;
 import com.zzs.zzsadmin.entity.Menu;
 import com.zzs.zzsadmin.vo.menu.MenuVo;
+import com.zzs.zzsadmin.vo.menu.MenuTreeVo;
 
 import java.util.List;
 
@@ -25,5 +25,9 @@ public interface IMenuService  extends IService<Menu> {
 
     List<MenuTreeDto> GetMenuTree();
 
-    List<UserMenuTreeDto> GetUserMenuTree(String userId);
+    List<MenuTreeVo> getMenuTree();
+
+    List<MenuTreeVo> GetUserMenuTree(String userId);
+
+    List<String> getUserBtn(String userId);
 }
