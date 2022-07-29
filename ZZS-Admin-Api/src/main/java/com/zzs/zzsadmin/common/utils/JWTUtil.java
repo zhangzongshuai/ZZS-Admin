@@ -12,10 +12,16 @@ public class JWTUtil {
     //私钥
     private static String mysecret = "zzs@$%!*";
 
-    public static String CreateToken(String username, String userJson) {
+    /**
+     * 生成token
+     * @param username 登录名
+     * @param userJson
+     * @param expiresTime 过期时长(毫秒)
+     * @return
+     */
+    public static String CreateToken(String username, String userJson,Long expiresTime) {
         String token = null;
-        //有效期 12小时
-        Date expiresAt = new Date(System.currentTimeMillis() + 12 * 60L * 60L * 1000L);
+        Date expiresAt = new Date(System.currentTimeMillis() + expiresTime);
         token = JWT.create()
                 .withIssuer("auth0")
                 .withClaim("username", username)
@@ -26,16 +32,13 @@ public class JWTUtil {
                 .sign(Algorithm.HMAC256(mysecret));
 
         return token;
-
     }
 
     public static DecodedJWT deToken(final String token) {
         DecodedJWT jwt = null;
         // 使用了HMAC256加密算法。
         // mysecret是用来加密数字签名的密钥。
-        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(mysecret)).withIssuer("auth0").build();// Reusable
-        // verifier
-        // instance
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(mysecret)).withIssuer("auth0").build();
         jwt = verifier.verify(token);
 
         return jwt;

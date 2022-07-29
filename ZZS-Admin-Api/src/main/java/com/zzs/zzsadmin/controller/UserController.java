@@ -1,6 +1,9 @@
 package com.zzs.zzsadmin.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zzs.zzsadmin.common.utils.AssertUtil;
 import com.zzs.zzsadmin.common.vo.BaseResultData;
@@ -13,12 +16,19 @@ import com.zzs.zzsadmin.entity.User;
 import com.zzs.zzsadmin.service.IRoleUserService;
 import com.zzs.zzsadmin.service.IUserService;
 import com.zzs.zzsadmin.vo.role.UserRoleVo;
+import com.zzs.zzsadmin.vo.user.UserExcelVo;
 import com.zzs.zzsadmin.vo.user.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,7 +181,7 @@ public class UserController {
     @ApiOperation(value = "根据用户id获取角色")
     @GetMapping("/rolesByUserId")
     public ResultDataList<UserRoleVo> getRolesByUserId(String userId, Long pageNum, Long pageSize) {
-        if (pageSize == null){
+        if (pageSize == null) {
             pageSize = -1L;
             pageNum = 1L;
         }
@@ -195,6 +205,47 @@ public class UserController {
         BaseResultData res = new BaseResultData();
         userService.configUserRoles(roleIds, userId);
         return res;
+    }
+
+    /**
+     * 导出用户
+     *
+     * @param name
+     * @return
+     */
+    @ApiOperation(value = "导出用户")
+    @PostMapping("/downloadUsers")
+    public void downloadUsers(@RequestParam String name) throws IOException {
+
+        List<User> user = userService.getUser(name);
+        List<UserExcelVo> userExcelVos = new ArrayList<>();
+        user.forEach(f->{
+            UserExcelVo excelVo = new UserExcelVo();
+            BeanUtil.copyProperties(f,excelVo);
+            userExcelVos.add(excelVo);
+        });
+        ExcelWriter writer = ExcelUtil.getWriter(true);
+        Sheet sheet = writer.getSheet();
+        sheet.setDefaultRowHeight((short) (20 * 20));
+
+
+        writer.addHeaderAlias("name", "名称").setColumnWidth(0, 25);
+        writer.addHeaderAlias("loginName", "账户").setColumnWidth(1, 50);
+        writer.addHeaderAlias("sex", "性别").setColumnWidth(2, 25);
+        writer.addHeaderAlias("phoneNum", "电话").setColumnWidth(3, 25);
+        writer.addHeaderAlias("email", "邮箱").setColumnWidth(4, 25);
+
+        writer.write(userExcelVos, true);
+        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=test.xlsx");
+        OutputStream out = null;
+        out = response.getOutputStream();
+
+        writer.flush(out, true);
+        writer.close();
+        out.close();
     }
 
 

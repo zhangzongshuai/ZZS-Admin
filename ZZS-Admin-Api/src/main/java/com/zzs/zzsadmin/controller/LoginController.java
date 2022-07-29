@@ -41,5 +41,11 @@ public class LoginController {
         return new BaseResultData();
     }
 
+//    @ApiOperation(value = "刷新token")
+//    @GetMapping("/refreshToken")
+//    public ResultData<UserTokenVo> refreshToken(@RequestParam String loginName) {
+//        UserTokenVo userTokenVo = userService.refreshToken(loginName);
+//        return new ResultData<>(userTokenVo);
+//    }
 
 }

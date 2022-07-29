@@ -12,8 +12,10 @@
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-download" @click="downloadUser">导出</el-button>
+        </el-form-item>
       </el-form>
-
 
       <template>
         <el-table
@@ -167,6 +169,7 @@
 
 <script>
 import {showHeight} from "@/common/tableHeight";
+import {formatDate} from "@/common";
 
 let userInfo = JSON.parse(localStorage.getItem('userInfo'));
 export default {
@@ -383,6 +386,13 @@ export default {
           _this.$message.error(res.errmsg);
         }
       });
+    },
+    downloadUser(){
+      let fileName = "用户导出" + formatDate(new Date(), "YmdHis") + ".xlsx";
+      let params = {
+        name: this.searchParams.name
+      }
+      this.$download(this.$api.downloadUsers,fileName,null,params);
     }
   }
 }

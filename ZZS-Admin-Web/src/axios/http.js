@@ -3,12 +3,17 @@ import {Message} from 'element-ui';
 import router from '../router'
 import NProgress from "nprogress"
 
-//const token = localStorage.getItem('token')
+
 // 添加请求拦截器
 axios.interceptors.request.use(config => {
     if (window.localStorage.token) {
         NProgress.start();
-        config.headers.Authorization = window.localStorage.token;
+        if (config.url.indexOf('refreshToken') > -1) {
+            console.log('请求刷新token')
+            config.headers.Authorization = window.localStorage.refreshToken;
+        } else {
+            config.headers.Authorization = window.localStorage.token;
+        }
         if (config.params) {
             config.params.t = new Date().getTime();
         } else {
@@ -43,19 +48,34 @@ const codeMessage = {
 // 添加响应拦截器
 axios.interceptors.response.use(response => {
     NProgress.done();
-    return Promise.resolve(response.data);
+    if (response.data.errcode === 409) {
+        window.localStorage.setItem("token", response.data.data);
+        // return Promise.resolve(response.config);
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                try {
+                    resolve(axios(response.config));
+                } catch (error) {
+                    reject(error)
+                }
+            }, 1000)
+        });
+    } else {
+        return Promise.resolve(response.data);
+    }
+
 }, error => {
     if (error.response) {
+        NProgress.done();
         let code = error.response.status;
         switch (code) {
             case 401:
                 Message.error({message: '登录信息失效，正在为您跳转登录页面！'});
                 window.localStorage.removeItem("token");
                 window.localStorage.removeItem("userInfo");
-                setTimeout(function (){
+                setTimeout(function () {
                     router.push("/login");
-                },3000)
-
+                }, 3000)
                 break;
             case 500:
                 Message.error(error.response.statusText)
@@ -63,7 +83,7 @@ axios.interceptors.response.use(response => {
             default:
                 Message.error(codeMessage[code])
         }
+        return Promise.reject(error.response.data);// 返回接口返回的错误信息
     }
-    NProgress.done();
-    return Promise.reject(error.response.data);// 返回接口返回的错误信息
+
 })

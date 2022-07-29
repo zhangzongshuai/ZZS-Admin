@@ -1,9 +1,12 @@
 package com.zzs.zzsadmin.interceptor;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.zzs.zzsadmin.annotation.IgnoreToken;
+import com.zzs.zzsadmin.common.exception.MessageException;
+import com.zzs.zzsadmin.common.exception.TokenException;
 import com.zzs.zzsadmin.common.utils.JWTUtil;
 import com.zzs.zzsadmin.entity.User;
 import com.zzs.zzsadmin.service.IUserService;
@@ -12,6 +15,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -39,6 +43,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) object;
         Method method = handlerMethod.getMethod();
 
+
         //检查是否有IgnoreToken注释，有则跳过认证
         if (method.isAnnotationPresent(IgnoreToken.class)) {
             IgnoreToken ignoreToken = method.getAnnotation(IgnoreToken.class);
@@ -54,12 +59,17 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         String username;
         Date expiresAt;
         try {
-            DecodedJWT decodedJWT = JWTUtil.deToken(token);
+            DecodedJWT decodedJWT = JWT.decode(token);
             username = decodedJWT.getClaim("username").asString();
             expiresAt = decodedJWT.getExpiresAt();
             if (expiresAt.getTime() < System.currentTimeMillis()) {
-                httpServletResponse.setStatus(401);
-                return false;
+
+                if (expiresAt.getTime() +  60L * 60L * 1000L < System.currentTimeMillis()) {
+                    httpServletResponse.setStatus(401);
+                    return false;
+                } else {
+                    throw new TokenException("", username);
+                }
             }
         } catch (JWTDecodeException j) {
             httpServletResponse.setStatus(401);

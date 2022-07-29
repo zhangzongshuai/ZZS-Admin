@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Api(tags = "测试一下")
 @RestController
-@RequestMapping("/model")
+@RequestMapping("/api")
 public class HelloController {
 
     @GetMapping("rtdb/tags")
@@ -70,6 +70,13 @@ public class HelloController {
     @IgnoreToken
     public BaseResultData GetResult() {
         return new ResultData<String>("hello,request success!");
+    }
+
+
+    @ApiOperation(value = "测试2")
+    @GetMapping("/test")
+    public BaseResultData getTest() {
+        return new ResultData<String>("hello,Test!");
     }
 
 

@@ -100,4 +100,8 @@ public interface IUserService extends IService<User> {
      * @param userId
      */
     void logout(String userId);
+
+
+    UserTokenVo refreshToken(String userId);
+
 }

@@ -261,7 +261,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new MessageException("密码错误!");
         }
         // JWT
-        String token = JWTUtil.CreateToken(loginDto.getLoginName(), json);
+        String token = JWTUtil.CreateToken(loginDto.getLoginName(), json, 2 * 60L * 60L * 1000L);
         UserTokenVo tokenVo = new UserTokenVo();
         tokenVo.setToken(token);
         tokenVo.setUserId(user.getId());
@@ -294,5 +294,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         LoginLog one = loginLogService.getOne(wrapper);
         one.setOutTime(new Date());
         loginLogService.updateById(one);
+    }
+
+    @Override
+    public UserTokenVo refreshToken(String loginName){
+        User user = getUserByLoginName(loginName);
+
+        if (user == null) {
+            throw new MessageException("用户名不存在!");
+        }
+        LoginUser u = new LoginUser();
+        u.setId(user.getId());
+        u.setLoginName(user.getLoginName());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = null;
+
+        try {
+            json = objectMapper.writeValueAsString(u);
+        } catch (JsonProcessingException e) {
+            throw new MessageException("密码错误!");
+        }
+        // JWT
+        String token = JWTUtil.CreateToken(loginName, json,2 * 60L * 60L * 1000L);
+        String refreshToken = JWTUtil.CreateToken(loginName, json,2 * 60L * 60L * 1000L);
+        UserTokenVo tokenVo = new UserTokenVo();
+        tokenVo.setToken(token);
+        tokenVo.setUserId(user.getId());
+        tokenVo.setUserName(user.getName());
+        tokenVo.setLoginName(user.getLoginName());
+        return tokenVo;
     }
 }

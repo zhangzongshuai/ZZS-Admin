@@ -77,6 +77,7 @@ export default {
             if (res.errcode === 0) {
               if (res.data) {
                 window.localStorage.setItem('token', res.data.token)
+                window.localStorage.setItem('refreshToken', res.data.refreshToken)
                 var userInfo = {
                   user_id: res.data.userId,
                   user_name: res.data.userName,
@@ -90,8 +91,8 @@ export default {
                   window.localStorage.removeItem('login')
                 }
                 window.localStorage.setItem('userInfo', JSON.stringify(userInfo));
-                let userPermissions = ['sys:modifyMenu']
-                window.sessionStorage.setItem('userPermissions', JSON.stringify(userPermissions));
+                // let userPermissions = ['sys:modifyMenu']
+                // window.sessionStorage.setItem('userPermissions', JSON.stringify(userPermissions));
                 // 延迟一秒跳转，直接跳转有可能localstorage存储异常
                 setTimeout(function () {
                   _this.$router.push('/index');

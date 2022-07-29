@@ -67,7 +67,14 @@ const router = new VueRouter({
                     name: 'loginLog',
                     component: () => import('@/views/logManager/loginLog'),
                     meta: {title: '登录日志'}
-                }
+                },
+                {
+                    path: '/test',
+                    name: 'test',
+                    component: () => import('@/views/systemManager/test'),
+                    meta: {title: '测试'}
+                },
+
             ]
         },
         {

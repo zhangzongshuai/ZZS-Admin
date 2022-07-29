@@ -28,6 +28,8 @@ export const systemApi = {
 
     getUserRoles : userApi + 'rolesByUserId',
 
+    downloadUsers:userApi + 'downloadUsers',
+
 
     //菜单管理
     getMenus: menuApi + 'pageList',
