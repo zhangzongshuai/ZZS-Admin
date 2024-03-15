@@ -37,7 +37,7 @@ public class AccessLogServiceImpl extends ServiceImpl<AccessLogMapper, AccessLog
                 .ge(StringUtils.isNotBlank(startTime), "operate_time", startTime)
                 .le(StringUtils.isNotBlank(endTime), "operate_time", endTime)
                 .orderByDesc("operate_time");
-        IPage<AccessLog> accessLogIPage = this.page(page);
+        IPage<AccessLog> accessLogIPage = this.page(page,wrapper);
         return accessLogIPage;
     }
 

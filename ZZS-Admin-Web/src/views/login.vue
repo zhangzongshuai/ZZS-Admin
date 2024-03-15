@@ -21,6 +21,9 @@
 
       </el-form>
     </div>
+    <div class="login-foot">
+      <a href="https://beian.miit.gov.cn/" target="_blank" style="color: white">豫ICP备19022606号-1</a>
+    </div>
   </div>
 </template>
 
@@ -165,5 +168,14 @@ export default {
   font-size: 12px;
   line-height: 30px;
   color: #fff;
+}
+.login-foot{
+  position: absolute;
+  bottom: 0px;
+  text-align: center;
+  width: 100%;
+  background: rgba(0, 0, 0,0.3);
+  padding: 12px;
+  font-size: 12px;
 }
 </style>

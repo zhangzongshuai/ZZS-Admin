@@ -6,6 +6,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+/***
+* <p></p>
+* @param
+* @return
+* @author zzs
+* @date 2022/9/20 21:42
+*/
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
 

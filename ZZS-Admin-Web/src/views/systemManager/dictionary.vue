@@ -15,13 +15,12 @@ export default {
     }
   },
   created() {
-    this.test();
-    this.test2();
+
   },
   methods: {
 
     aaa() {
-      this.test();
+      this.dictionary();
       this.test2();
     },
 
@@ -52,6 +51,7 @@ export default {
     },
   }
 }
+
 </script>
 
 <style scoped>

@@ -69,11 +69,23 @@ const router = new VueRouter({
                     meta: {title: '登录日志'}
                 },
                 {
-                    path: '/test',
-                    name: 'test',
-                    component: () => import('@/views/systemManager/test'),
-                    meta: {title: '测试'}
+                    path: '/dictionary',
+                    name: 'dictionary',
+                    component: () => import('@/views/systemManager/dictionary'),
+                    meta: {title: '字典管理'}
                 },
+                {
+                    path: '/formDesigner',
+                    name: 'formDesigner',
+                    component: () => import('@/views/systemManager/formDesigner'),
+                    meta: {title: '表单设计'}
+                },
+                {
+                    path: '/editor',
+                    name: 'editor',
+                    component: () => import('@/views/componentTools/editor'),
+                    meta: {title: 'markdown编辑器'}
+                }
 
             ]
         },

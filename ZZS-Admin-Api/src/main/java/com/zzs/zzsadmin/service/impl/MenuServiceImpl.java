@@ -1,6 +1,7 @@
 package com.zzs.zzsadmin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -24,9 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -215,7 +214,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         } else {
             parentList = list.stream().filter(s -> Objects.equals(s.getParentId(), pid)).collect(Collectors.toList());
         }
-
 
         if (!parentList.isEmpty()) {
             for (Menu o : parentList) {

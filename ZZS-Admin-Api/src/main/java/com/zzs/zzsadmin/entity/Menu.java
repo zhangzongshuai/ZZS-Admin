@@ -34,8 +34,13 @@ public class Menu extends BaseModel {
 
     private String type;
 
+    /**
+     * 权限标识
+     */
     private String permissionCode;
-
+    /**
+     * 图标
+     */
     private String iconCode;
     /**
      * order_id

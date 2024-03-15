@@ -13,6 +13,9 @@ import apiIndex from "@/api";
 import {download} from "@/common/download"
 import "./assets/js/directives.js"
 
+import formCreate from '@form-create/element-ui'
+import FcDesigner from '@form-create/designer'
+
 import "nprogress/nprogress.css"
 import * as echarts from "echarts";
 import 'echarts-liquidfill';
@@ -24,6 +27,8 @@ Vue.prototype.$api = apiIndex;
 Vue.prototype.$download = download;
 Vue.prototype.$echarts = echarts;
 Vue.use(Element);
+Vue.use(formCreate)
+Vue.use(FcDesigner)
 //
 // Vue.use(Element,{
 //   size:'small'
