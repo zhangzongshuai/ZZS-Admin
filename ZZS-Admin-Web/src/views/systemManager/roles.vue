@@ -123,6 +123,10 @@
                 :props="defaultProps"
                 node-key="id"
                 show-checkbox>
+                <span class="custom-tree-node" slot-scope="{ node, data }">
+                  <span v-if="data.isEnabled === 0" style="color: red" title="已禁用">{{ node.label }}</span>
+                  <span v-if="data.isEnabled === 1">{{ node.label }}</span>
+                </span>
             </el-tree>
           </div>
         </el-col>
@@ -218,7 +222,7 @@ import {showHeight} from "@/common/tableHeight";
 
 let userInfo = JSON.parse(localStorage.getItem('userInfo'));
 export default {
-  name: "roles",
+  name: "Roles",
   data() {
     return {
       tableHeight: null,
@@ -289,7 +293,7 @@ export default {
       _this.$axios.get(_this.$api.getRoles, {params}).then(function (res) {
         if (res.errcode === 0) {
           _this.tableData = res.datas;
-          _this.total = res.totalCount;
+          _this.pageOptions.total = res.totalCount;
         } else {
           _this.$message.error(res.errmsg);
         }

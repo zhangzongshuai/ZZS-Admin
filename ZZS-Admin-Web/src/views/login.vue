@@ -4,13 +4,22 @@
       <div class="ms-title">后台管理系统</div>
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
         <el-form-item prop="loginName">
-          <el-input v-model="ruleForm.loginName" placeholder="用户名">
+          <el-input v-model="ruleForm.loginName" placeholder="用户名" prefix-icon="el-icon-user">
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" placeholder="密码" v-model="ruleForm.password"
-                    @keyup.enter.native="submitForm('ruleForm')">
+          <el-input type="password" placeholder="密码" v-model="ruleForm.password" prefix-icon="el-icon-lock">
           </el-input>
+        </el-form-item>
+        <el-form-item prop="captcha">
+          <el-input 
+            placeholder="验证码" 
+            style="width: 250px"
+            prefix-icon="el-icon-picture-outline"
+            v-model="ruleForm.captcha" 
+            @keyup.enter.native="submitForm('ruleForm')">
+          </el-input>
+          <img id="captchaImage" src="/api/captcha" alt="验证码" title="点击刷新" @click="refreshCaptcha">
         </el-form-item>
         <el-form-item prop="rememberMe">
           <el-checkbox v-model="rememberMe">记住我</el-checkbox>
@@ -35,7 +44,8 @@ export default {
     return {
       ruleForm: {
         loginName: '',
-        password: ''
+        password: '',
+        captcha: ''
       },
       rememberMe: true,
       rules: {
@@ -44,6 +54,9 @@ export default {
         ],
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'}
+        ],
+        captcha: [
+          {required: true, message: '请输入验证码', trigger: 'blur'}
         ]
       },
       loginLoading: false,
@@ -56,7 +69,9 @@ export default {
       if (rememberMe == "true") {
         this.rememberMe = true;
         if (typeof (login) != "undefined") {
-          this.ruleForm = JSON.parse(login);
+          let rememberUser = JSON.parse(login);
+          this.ruleForm.loginName = rememberUser.loginName
+          this.ruleForm.password = rememberUser.password
         }
       } else {
         this.rememberMe = false;
@@ -71,25 +86,28 @@ export default {
     window.localStorage.removeItem('token')
   },
   methods: {
+    refreshCaptcha() {
+      var captchaImage = document.getElementById('captchaImage');
+      captchaImage.src = '/api/captcha?t=' + new Date().getTime();
+    },
     submitForm(formName) {
       let _this = this;
       _this.loginLoading = true;
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          _this.$axios.post(_this.$api.login, _this.ruleForm).then(function (res) {
+          this.$axios.post(this.$api.login, this.ruleForm).then(res => {
             if (res.errcode === 0) {
               if (res.data) {
                 window.localStorage.setItem('token', res.data.token)
-                window.localStorage.setItem('refreshToken', res.data.refreshToken)
                 var userInfo = {
                   user_id: res.data.userId,
                   user_name: res.data.userName,
                   login_name: res.data.loginName
                 }
-                window.localStorage.setItem("rememberMe", _this.rememberMe)
-                if (_this.rememberMe) {
-                  window.localStorage.setItem('login', JSON.stringify(_this.ruleForm));
-                  window.localStorage.setItem("rememberMe", _this.rememberMe)
+                window.localStorage.setItem("rememberMe", this.rememberMe)
+                if (this.rememberMe) {
+                  window.localStorage.setItem('login', JSON.stringify({loginName: this.ruleForm.loginName, password: this.ruleForm.password}));
+                  window.localStorage.setItem("rememberMe", this.rememberMe)
                 } else {
                   window.localStorage.removeItem('login')
                 }
@@ -143,11 +161,16 @@ export default {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 350px;
+  width: 400px;
   margin: -190px 0 0 -175px;
   border-radius: 5px;
   background: rgba(0, 0, 0, 0.3);
   overflow: hidden;
+}
+
+#captchaImage {
+  float: right;
+  border-radius: 3px;
 }
 
 .ms-content {

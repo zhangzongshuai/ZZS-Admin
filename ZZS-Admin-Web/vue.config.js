@@ -12,10 +12,8 @@ module.exports = {
 
             '/api':{
                 target:'http://localhost:5000',
-                changeOrigin:true,
-                pathRewrite:{
-                    '/api':'api'
-                }
+                // target:'http://www.zzszone.cn:5200',
+                changeOrigin:true
             },
             '/hello':{
                 target:'http://localhost:7000',
@@ -23,7 +21,25 @@ module.exports = {
                 pathRewrite:{
                     '/hello':'hello'
                 }
-            }
+            },
+            '/stream':{
+                target:'http://haiyou.s7.tunnelfrp.com',
+                changeOrigin:true
+            },
+            '/haiyou':{
+                target:'http://haiyou.s7.tunnelfrp.com',
+                changeOrigin:true,
+                pathRewrite:{
+                    '/haiyou':''
+                }
+            },
+            '/chatglm':{
+                target:'https://chatglm.cn',
+                changeOrigin:true,
+                pathRewrite:{
+                    '/chatglm':'chatglm'
+                }
+            },
 
         }
     },

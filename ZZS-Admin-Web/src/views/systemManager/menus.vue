@@ -254,7 +254,7 @@ export default {
       if (_this.searchParams.name) {
         params.name = _this.searchParams.name;
       }
-      _this.$axios.get(_this.$api.getMenuTree, {params}).then(function (res) {
+      _this.$axios.get(_this.$api.getMenuTree, {params}).then( (res) => {
         if (res.errcode === 0) {
           _this.tableData = res.datas;
           _this.pageOptions.total = res.totalCount;

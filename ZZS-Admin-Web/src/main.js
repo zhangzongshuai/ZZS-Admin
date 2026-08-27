@@ -12,6 +12,7 @@ import axios from 'axios';
 import apiIndex from "@/api";
 import {download} from "@/common/download"
 import "./assets/js/directives.js"
+import '@/assets/style/highlight.less'
 
 import formCreate from '@form-create/element-ui'
 import FcDesigner from '@form-create/designer'

@@ -15,7 +15,7 @@ const router = new VueRouter({
     routes: [
         {
             path: '/',
-            redirect: '/login'
+            redirect: '/index'
         },
         {
             path: '/login',
@@ -85,6 +85,12 @@ const router = new VueRouter({
                     name: 'editor',
                     component: () => import('@/views/componentTools/editor'),
                     meta: {title: 'markdown编辑器'}
+                },
+                {
+                    path: '/chatgpt',
+                    name: 'chatgpt',
+                    component: () => import('@/views/systemManager/chatgpt'),
+                    meta: {title: 'AI问答'}
                 }
 
             ]

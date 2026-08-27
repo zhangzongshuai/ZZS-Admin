@@ -11,7 +11,12 @@ axios.interceptors.request.use(config => {
         if (config.url.indexOf('refreshToken') > -1) {
             console.log('请求刷新token')
             config.headers.Authorization = window.localStorage.refreshToken;
-        } else {
+        } 
+        else if (config.headers.Authorization) {
+            // 如果传的有token,则不使用传过来的token
+            // 应对访问外部接口时的token
+        }
+        else {
             config.headers.Authorization = window.localStorage.token;
         }
         if (config.params) {
@@ -49,6 +54,7 @@ const codeMessage = {
 axios.interceptors.response.use(response => {
     NProgress.done();
     if (response.data.errcode === 409) {
+        // token过期,无感刷新token
         window.localStorage.setItem("token", response.data.data);
         // return Promise.resolve(response.config);
         return new Promise((resolve, reject) => {

@@ -21,7 +21,7 @@ thead{
   position: absolute;
   left: 220px;
   right: 0;
-  top: 70px;
+  top: 60px;
   bottom: 0;
   -webkit-transition: left .3s ease-in-out;
   transition: left .3s ease-in-out;
@@ -44,13 +44,13 @@ thead{
 }
 
 .container {
-  //margin: 15px;
+  /* margin: 15px; */
   padding: 10px;
   border-radius: 2px;
-  //box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05); */
   min-height: calc(100% - 100px);
   height: calc(100% - 20px);
-  //height: 100%;
+  /* height: 100%; */
 }
 
 .crumbs {
@@ -60,7 +60,7 @@ thead{
   display: flex;
   align-items: center;
   font-size: 16px;
-  padding-left: 15px;
+  /* padding-left: 15px; */
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
 }
 

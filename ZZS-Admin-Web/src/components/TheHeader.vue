@@ -4,14 +4,23 @@
     <!-- 折叠按钮 -->
     <div class="collapse-btn" @click="collapseChage">
       <i class="el-icon-menu"></i>
-<!--      <img  src="../../public/favicon.jpg" style="width: 50px;height: 50px" alt="logo">-->
+     <!-- <img  src="../../public/title.svg" style="width: 50px;height: 50px" alt="logo"> -->
     </div>
     <div class="logo">ZZS后台管理系统</div>
     <div class="header-right">
       <div class="header-user-con">
-        <div class="btn-fullscreen" @click="handleFullScreen">
+        <div class="header-right-icon">
+          <el-badge is-dot>
+            <el-tooltip effect="dark" content="您有0条未读消息" placement="bottom">
+              <i class="el-icon-message-solid"></i>
+            </el-tooltip>
+          </el-badge>
+          
+          <!-- <i class="el-icon-message-solid"></i> -->
+        </div>
+        <div class="header-right-icon" @click="handleFullScreen">
           <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
-            <i class="el-icon-rank"></i>
+            <i class="el-icon-full-screen"></i>
           </el-tooltip>
         </div>
 
@@ -20,8 +29,8 @@
             <span style="font-size: 14px;color: #fff">
               {{ user_name }}
             </span>
-                         <i class="el-icon-caret-bottom" style="color:#fff"></i>
-                    </span>
+              <i class="el-icon-caret-bottom" style="color:#fff"></i>
+          </span>
           <el-dropdown-menu slot="dropdown">
             <!--            <div>-->
             <!--              <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>-->
@@ -229,7 +238,7 @@ export default {
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  height: 70px;
+  height: 60px;
   font-size: 22px;
   color: #fff;
 }
@@ -240,13 +249,13 @@ export default {
   text-align: center;
   height: 100%;
   cursor: pointer;
-  line-height: 70px;
+  line-height: 60px;
 }
 
 .header .logo {
   float: left;
   margin-left: 20px;
-  line-height: 70px;
+  line-height: 60px;
 }
 
 .header-right {
@@ -256,7 +265,7 @@ export default {
 
 .header-user-con {
   display: flex;
-  height: 70px;
+  height: 60px;
   align-items: center;
   font-size: 16px;
 }
@@ -289,7 +298,10 @@ export default {
 
 .btn-fullscreen {
   transform: rotate(45deg);
-  margin-right: 5px;
-  font-size: 24px;
+}
+
+.header-right-icon {
+  margin-right: 10px;
+  font-size: 20px;
 }
 </style>

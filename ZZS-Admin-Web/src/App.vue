@@ -15,7 +15,7 @@ export default {
 //@import './assets/styles/main';
 @import "./assets/style/base.css";
 @import "./assets/style/common.css";
-@import "./assets/style/style.css";
+@import "./assets/style/style.less";
 #nprogress .bar {
   background: #890340 !important; //自定义颜色
 }

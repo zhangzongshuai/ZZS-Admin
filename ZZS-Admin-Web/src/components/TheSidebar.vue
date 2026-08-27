@@ -156,7 +156,7 @@ export default {
   display: block;
   position: absolute;
   left: 0;
-  top: 70px;
+  top: 60px;
   bottom: 0;
   overflow-y: scroll;
   z-index: 1;

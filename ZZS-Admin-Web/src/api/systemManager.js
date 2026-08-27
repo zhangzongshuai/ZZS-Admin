@@ -71,5 +71,7 @@ export const systemApi = {
 
     configRoleUser: roleApi + 'configRoleUser',
 
+    // chatgpt
+    onChatgpt: 'chatglm/backend-api/assistant/stream'
 
 }
