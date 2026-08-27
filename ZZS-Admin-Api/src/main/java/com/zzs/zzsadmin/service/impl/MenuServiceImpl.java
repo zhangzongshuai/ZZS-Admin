@@ -119,8 +119,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public List<MenuTreeVo> getMenuTree() {
         QueryWrapper<Menu> wrapper = new QueryWrapper<>();
-        wrapper.eq("is_enabled", 1)
-                .orderByAsc("order_id");
+//        wrapper.eq("is_enabled", 1);
+        wrapper.orderByAsc("order_id");
         List<Menu> menuList = menuMapper.selectList(wrapper);
         List<MenuTreeVo> treeList = new ArrayList<>();
         for (Menu m : menuList) {

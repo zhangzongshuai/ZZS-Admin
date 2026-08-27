@@ -18,6 +18,9 @@ public class LoginDto {
     @ApiModelProperty(value = "密码")
     private String password;
 
+    @ApiModelProperty(value = "验证码")
+    private String captcha;
+
     @ApiModelProperty(hidden = true)
 //    @JsonIgnore
     private String ip;

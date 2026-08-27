@@ -62,7 +62,7 @@ public class ExceptionAdvice {
     }
 
     @ExceptionHandler({JsonProcessingException.class})
-    public BaseResultData JsonException(RuntimeException e) {
+    public BaseResultData jsonException(RuntimeException e) {
         return this.defHandler(e);
     }
 
@@ -90,7 +90,7 @@ public class ExceptionAdvice {
         User user = userService.getUserByLoginName(e.getName());
 
         if (user == null) {
-            throw new MessageException("用户名不存在!");
+            throw new MessageException("用户不存在或者已被删除,请联系管理员!");
         }
         if (user.getIsEnabled() != 1) {
             throw new MessageException("用户已被禁用,请联系管理员!");

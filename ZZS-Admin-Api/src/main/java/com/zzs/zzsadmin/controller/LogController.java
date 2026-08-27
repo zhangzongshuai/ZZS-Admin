@@ -30,7 +30,7 @@ import java.util.List;
  * @author 张宗帅
  * @date 2021-01-22 10:30:33
  */
-@Api(tags = "登录日志管理")
+@Api(tags = "日志管理")
 @RestController
 @RequestMapping("/api/logManager")
 public class LogController {

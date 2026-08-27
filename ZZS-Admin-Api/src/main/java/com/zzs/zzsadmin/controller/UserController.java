@@ -228,7 +228,6 @@ public class UserController {
         Sheet sheet = writer.getSheet();
         sheet.setDefaultRowHeight((short) (20 * 20));
 
-
         writer.addHeaderAlias("name", "名称").setColumnWidth(0, 25);
         writer.addHeaderAlias("loginName", "账户").setColumnWidth(1, 50);
         writer.addHeaderAlias("sex", "性别").setColumnWidth(2, 25);

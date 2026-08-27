@@ -35,5 +35,8 @@ public class MenuTreeVo {
 
     private String orderId;
 
+    private Integer isEnabled;
+
     private List<MenuTreeVo> children;
+
 }
